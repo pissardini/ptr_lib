@@ -1,3 +1,7 @@
+#Name: skyplot_gnss.py
+#Description: A simple script to create a skyplot view for GNSS satellites.
+#Author: R.S. Pissardini <rodrigo AT usp DOT br>
+
 import numpy as np
 import matplotlib.pyplot as plt
 import math  
