@@ -20,8 +20,8 @@ def skyplot (prn,e,az):
 	ax.set_yticklabels(ax.get_yticks()[::-1])
 
 	for sv, elev, azim in zip(prn, e, az):
-	    ax.plot(math.radians(az), 90-e,color='green', marker='o', markersize=20)
-	    ax.text(math.radians(az), 90-e,prn, ha='center', va='center',color='white')
+	    ax.plot(math.radians(azim), 90-elev,color='green', marker='o', markersize=20)
+	    ax.text(math.radians(azim), 90-elev, sv, ha='center', va='center',color='white')
 
 	plt.show()
 
