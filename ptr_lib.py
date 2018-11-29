@@ -207,7 +207,31 @@ def geodetic2cartesian(lat,lon,h, a =6378137, b=6356752.314140347): #SIRGAS
         lon = degrees(atan2(radians(Y), radians(X))) #in degrees
         return [lat,lon,H]
 
-
+def geodetic2enu (lat, lon, h, a = 6378137, b = 6356752.314140347):
+    """ Convert from geodetic to a different ENU local coordinate system.
+    East  -- is the longitude multiplied by the radius of the small circle at that latitude
+    North -- is the product of the  geodetic latitue by the semi-major axis of the ellipsoid
+    Up    -- is the geodetic height
+    
+    Keyword arguments:
+    lat -- latitude in degrees
+    lon -- longitude in degrees
+    h   -- geodetic height in meters
+    a   -- semi-major axis (default SIRGAS)
+    b   -- semi-minor axis (default SIRGAS)
+    
+    """
+    	e2 = (pow(a,2) -pow(b,2))/pow(a,2)
+    	lat = radians(lat)
+    	v = a/sqrt(1- e2* pow(sin(lat),2))
+    	small_circle = v * cos(lat)
+    	if (lon < 0):
+        	lon+=360
+    	E = radians(lon) * small_circle
+   	N = lat * a
+    	U = h
+    	return [E, N, U]
+    
 def helmert_transformation (X,Y,Z,tx,ty,tz,s,rx,ry,rz,a= 6378137,b=6356752.314140347):
 
 	xp = tx + ((1 + s) * X) - (rz * Y) + (ry * Z)
