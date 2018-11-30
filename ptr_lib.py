@@ -228,7 +228,7 @@ def geodetic2enu (lat, lon, h, a = 6378137, b = 6356752.314140347):
     """
     	e2 = (pow(a,2) -pow(b,2))/pow(a,2)
     	lat = radians(lat)
-    	v = a/sqrt(1- e2* pow(sin(lat),2))
+    	v = a/pow((1- e2* pow(sin(lat),2)),0.5)
     	small_circle = v * cos(lat)
     	if (lon < 0):
         	lon+=360
