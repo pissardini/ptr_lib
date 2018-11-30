@@ -1,5 +1,6 @@
 #
 # Copyright (c) 2014 R.Pissardini <rodrigo AT pissardini DOT com> 
+# Copyright (c) 2018 R.Pissardini <rodrigo AT pissardini DOT com> and Alex Boava Meza 
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -192,20 +193,24 @@ def geodetic2cartesian(lat,lon,h, a =6378137, b=6356752.314140347): #SIRGAS
 	Z = ((1.-e2) * N + h) * sin(radians(lat))
 	return [X,Y,Z]
  
- def cartesian2geodetic (X, Y, Z, a = 6378137,b = 6356752.314140347): #SIRGAS
+def cartesian2geodetic (X, Y, Z, a = 6378137,b = 6356752.314140347): #SIRGAS
+        H = 0
         v = 0
         e2 = (pow(a,2) -pow(b,2))/pow(a,2)
-        p = pow(pow(radians(X),2)+pow(radians(Y),2),0.5)
+        p = pow(pow(X,2)+pow(Y,2),0.5)
         lat = atan2(Z, p*(1-e2))
         lat1 = 2 * pi
-        while (lat-lat1 > 4):
-                v = a/(1- e2* pow(sin(lat),2))
+        
+        while fabs(lat1-lat) > 1e-15:
+                v = a/pow((1- e2* pow(sin(lat),2)),0.5)
+                H = p/cos(lat)- v
                 lat1 = lat
                 lat = atan2(Z + e2 * v * sin(lat),p)
-        H = p/cos(lat)- v
+        
         lat = degrees(lat) #in degrees
         lon = degrees(atan2(radians(Y), radians(X))) #in degrees
         return [lat,lon,H]
+
 
 def geodetic2enu (lat, lon, h, a = 6378137, b = 6356752.314140347):
     """ Convert from geodetic to a different ENU local coordinate system.
@@ -232,6 +237,8 @@ def geodetic2enu (lat, lon, h, a = 6378137, b = 6356752.314140347):
     	U = h
     	return [E, N, U]
     
+
+
 def helmert_transformation (X,Y,Z,tx,ty,tz,s,rx,ry,rz,a= 6378137,b=6356752.314140347):
 
 	xp = tx + ((1 + s) * X) - (rz * Y) + (ry * Z)
