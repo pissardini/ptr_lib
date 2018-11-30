@@ -192,21 +192,21 @@ def geodetic2cartesian(lat,lon,h, a =6378137, b=6356752.314140347): #SIRGAS
 	Z = ((1.-e2) * N + h) * sin(radians(lat))
 	return [X,Y,Z]
  
- def cartesian2geodetic (X, Y, Z, a = 6378137,b = 6356752.314140347): #SIRGAS
-        v = 0
-        e2 = (pow(a,2) -pow(b,2))/pow(a,2)
-        p = pow(pow(radians(X),2)+pow(radians(Y),2),0.5)
-        lat = atan2(Z, p*(1-e2))
-        lat1 = 2 * pi
-        while (lat-lat1 > 4):
-                v = a/(1- e2* pow(sin(lat),2))
-                lat1 = lat
-                lat = atan2(Z + e2 * v * sin(lat),p)
-        H = p/cos(lat)- v
-        lat = degrees(lat) #in degrees
-        lon = degrees(atan2(radians(Y), radians(X))) #in degrees
-        return [lat,lon,H]
-
+def cartesian2geodetic (X, Y, Z, a = 6378137,b = 6356752.314140347): #SIRGAS
+	dif=1
+	e2 = (pow(a,2) -pow(b,2))/pow(a,2)
+	p = sqrt((X**2)+Y**2)
+	lat_apr = atan2(Z, p*(1-e2))
+	lon=atan2(Y,X)
+	while (fabs(dif)  > 0.000000000000001):
+		v = a/sqrt(1- e2* pow(sin(lat_apr),2))
+		h = (p/cos(lat_apr)) - v
+		lat = atan2(Z, (1-e2*(v/(v+h)))*p)
+		dif = lat - lat_apr
+		lat_apr = lat
+	lat = degrees(lat) #in degrees
+	lon = degrees(lon) #in degrees
+	return [lat,lon,h]
 
 def helmert_transformation (X,Y,Z,tx,ty,tz,s,rx,ry,rz,a= 6378137,b=6356752.314140347):
 
