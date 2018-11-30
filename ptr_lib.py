@@ -310,6 +310,25 @@ def decimal2dms (decimal, direction): #N- E
         return
     return [degrees,minutes,seconds,direction]
 
+#skyplot and other charts 
+
+import matplotlib.pyplot as plt
+
+def skyplot (prn,e,az): #input lists of prn (or svid), elevation and azimuths 
+
+	ax = plt.subplot(111, projection='polar')
+	ax.set_theta_zero_location("N")
+	ax.set_theta_direction(-1)
+	ax.set_ylim(0,90)
+	ax.set_yticks(np.arange(0,91,30))
+	ax.set_yticklabels(ax.get_yticks()[::-1])
+
+	for sv, elev, azim in zip(prn, e, az):
+	    ax.plot(math.radians(azim), 90-elev,color='green', marker='o', markersize=20)
+	    ax.text(math.radians(azim), 90-elev, sv, ha='center', va='center',color='white')
+
+	plt.show()
+
 #General functions 
 
 def get_intpart (value): 
