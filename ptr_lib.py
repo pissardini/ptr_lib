@@ -1,5 +1,6 @@
 #
 # Copyright (c) 2014 R.Pissardini <rodrigo AT pissardini DOT com> 
+# Copyright (c) 2018 R.Pissardini <rodrigo AT pissardini DOT com> and Alex Boava Meza 
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
