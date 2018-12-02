@@ -26,10 +26,10 @@ import datetime
 #Computation of distance
 
 def diff_simple(ai,af):
-    return sqrt(pow(af-ai,2))
+    return pow(pow(af-ai,2), 0.5)
  
 def cartesian_distance (x, y, xf,yf): 
-	distance =  sqrt(((xf-x)**2)+ ((yf-y)**2))
+	distance = pow(pow(xf-x,2)+pow(yf-y,2),0.5)
 	return distance
 
 def spheric_cosines(lat1,lon1,lat2,lon2,earth_radius):
@@ -55,7 +55,7 @@ def harvesine (lat1, lon1, lat2,lon2, earth_radius):
 def equirec_approximation (lat1, lon1, lat2,lon2, earth_radius): # Equirectangular approximation
 	x = (lon2-lon1) * cos(lat1+lat2)/2
 	y = lat2 - lat1
-	d = sqrt(x * x + y * y) * earth_radius
+	d = pow(x * x + y * y, 0.5) * earth_radius
 	return d
   
 #Computation of angles
