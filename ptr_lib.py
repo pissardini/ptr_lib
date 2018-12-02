@@ -282,9 +282,9 @@ def radians2arcsec (radians):
     return seconds
 
 def dms2decimal (degrees, minutes, seconds, direction): #direction - N- S- W- E
-    if (direction=='S' or direction=='E'):
+    if (direction=='S' or direction=='W'):
         signal = -1
-    elif (direction=='N' or direction=='S'):
+    elif (direction=='N' or direction=='E'):
         signal = 1
     else:
         print('[Error] Insert a correct direction [ N, S, W or E]\n')
