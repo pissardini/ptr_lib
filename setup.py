@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
  
 setup(name='ptr_lib',
       version='0.0.1',
-      url='https://github.com/rpissardini/ptr_lib',
+      url='https://github.com/pissardini/ptr_lib',
       license='MIT',
       author='R.S.Pissardini, Alex Boava',
       author_email='pissardini@usp.br,alex.boava@usp.br',
