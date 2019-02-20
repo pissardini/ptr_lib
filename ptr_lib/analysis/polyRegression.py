@@ -53,7 +53,7 @@ def polyRegression(ts, poly=2):
         
         for i in range(poly):
             for ind in range(len(ts)):
-                ls[i].append([pow(float(ts.index[ind]),i)])
+                ls[i].append([pow(float(ts[ind]),i)])
     
         A = np.hstack(lista)
         At = A.transpose()
