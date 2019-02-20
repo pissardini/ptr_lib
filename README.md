@@ -1,5 +1,5 @@
 # ptr_lib
-A library of resources for Geomatics and GNSS Analysis. 
+A library of resources for Geomatics, GNSS Analysis and Transportation Engineering. 
 
 2014-2018. Developed by Laboratory of Geodesy and Topography - Polytechnic School of University of Sao Paulo 
 
