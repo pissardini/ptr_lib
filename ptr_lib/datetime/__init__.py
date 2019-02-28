@@ -21,6 +21,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from .datetimeComputations import *
+from .datetime import *
 
-__all__ = ["datetimeComputations"]
+__all__ = ["datetime"]

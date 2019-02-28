@@ -49,15 +49,5 @@ def julian_date(year,month,day,hour,minute,second):
         fracofday = ((hour+ (minute/60)+ (second/3600)))/24
         return MJD0 + mjdmidnight + fracofday
 
-#convert day-int to day-str with 3 char
-
-def day_of_year_int2string(day):
-    if day <10:
-        day = "00"+ str(day)
-    elif day <100:
-        day = "0"+ str(day)
-    else:
-        day = str(day)
-    return day
 
 
