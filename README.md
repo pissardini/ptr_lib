@@ -4,8 +4,8 @@ A library in Python of resources for Geomatics, GNSS Analysis and Transportation
 2014-2018. Developed by Laboratory of Geodesy and Topography - Polytechnic School of University of Sao Paulo 
 
 Authors: 
-    * R.Pissardini - B.Sc.Computer Science and M.Sc. Transportation Engineering
-    * A.Meza       - B.Eng.Cartographic Engineering
+    * R.Pissardini (@pissardini) - B.Sc.Computer Science and M.Sc. Transportation Engineering
+    * A.Meza (@alexBoava)        - B.Eng.Cartographic Engineering
 
 -------------
 
