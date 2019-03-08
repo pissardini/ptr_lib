@@ -1,7 +1,7 @@
 # -*- coding: cp1252 -*-
 
 #
-# Copyright (c) 2014-2018 R.Pissardini <rodrigo AT pissardini DOT com>
+# Copyright (c) 2014-2019 R.Pissardini <rodrigo AT pissardini DOT com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,7 @@
 # THE SOFTWARE.
 
 from math import *
+from ptr_lib.constants import RADIUS_EARTH
 import datetime
 
 #Computation of distance
@@ -33,7 +34,7 @@ def cartesian_distance (x, y, xf,yf):
 	distance = pow(pow(xf-x,2)+pow(yf-y,2),0.5)
 	return distance
 
-def spheric_cosines(lat1,lon1,lat2,lon2,earth_radius):
+def spheric_cosines(lat1,lon1,lat2,lon2,earth_radius=RADIUS_EARTH):
 	delta_lat = lat2 - lat1;
 	delta_lon = lon2 - lon1;
 	distance = acos(sin(radians(lat1))\
@@ -41,14 +42,28 @@ def spheric_cosines(lat1,lon1,lat2,lon2,earth_radius):
 		  cos(radians(lat2)) * cos(radians(delta_lon)))* earth_radius
 	return distance
 
-def harvesine (lat1, lon1, lat2,lon2, earth_radius):
+def harvesine (lat1, lon1, lat2,lon2, earth_radius=RADIUS_EARTH):
+    '''Harvesine - return distance between two points in meters
+
+      Input:
+        - lat1, lon1 : lat,lon of first position
+        - lat2, lon2 : lat,lon of second position
+
+      Output:
+        - distance in meters
+        '''
+        lat1 = radians(lat1)
+        lat2 = radians(lat2)
+        lon1 = radians(lon1)
+        lon2 = radians(lon2)
+
 	delta_lat = lat2 - lat1
 	delta_lon = lon2 - lon1
+	
 	alpha = delta_lat * 0.5;
 	beta = delta_lon * 0.5;
-	a = sin(radians(alpha))* sin(radians(alpha))+\
-		   cos(radians(lat1))*cos(radians(lat2)) *\
-		   sin(radians(beta)) * sin(radians(beta));
+
+	a = pow(sin(alpha),2) + pow(sin(beta),2)* cos(lat1)* cos(lat2)
 	c = 2 * atan2((a)*0.5, (1-a)*0.5)	
 	distance = earth_radius * c
 	return distance

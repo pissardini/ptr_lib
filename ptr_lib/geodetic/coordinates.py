@@ -115,6 +115,8 @@ def rotation_coordinates(x, y, angle): #angle in degrees
 #Transformations between reference systems
 
 def geodetic2cartesian(lat,lon,h, a =6378137, b=6356752.314140347): #SIRGAS
+        '''Convert from LLH to ECEF
+        '''
 	e2 = (pow(a,2) -pow(b,2))/pow(a,2)
 	N = a/(pow(1. -e2 * pow(sin(radians(lat)),2), 0.5))
 	X = (N+h) * cos(radians(lat)) * cos(radians(lon))

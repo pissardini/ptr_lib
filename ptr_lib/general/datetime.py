@@ -1,7 +1,7 @@
 # -*- coding: cp1252 -*-
 
 #
-# Copyright (c) 2014-2018 R.Pissardini <rodrigo AT pissardini DOT com>
+# Copyright (c) 2014-2019 R.Pissardini <rodrigo AT pissardini DOT com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,13 +24,19 @@
 from math import *
 import datetime
 
-#Computation of date and time 
+#Computation of date and time
 
 def day_of_year(year,month,day):
+        '''
+                Calculate day of year from a date
+        '''
 	doy = datetime.datetime(year, month, day).timetuple().tm_yday
 	return doy
 
-def julian_date(year,month,day,hour,minute,second): 
+def julian_date(year,month,day,hour,minute,second):
+        '''
+                Calculate julian date
+        '''
         MJD0 = 2400000.5
         b = 0
         
@@ -49,15 +55,23 @@ def julian_date(year,month,day,hour,minute,second):
         fracofday = ((hour+ (minute/60)+ (second/3600)))/24
         return MJD0 + mjdmidnight + fracofday
 
-#convert day-int to day-str with 3 char
+def itow2tow(itow_milliseconds):
+        '''
+                Convert from interval time of week (iToW) to time of week (ToW)
+        '''
+    seconds = itow_milliseconds/1000
+    rest    = itow_milliseconds %1000
+    return [seconds, rest]
 
-def day_of_year_int2string(day):
-    if day <10:
-        day = "00"+ str(day)
-    elif day <100:
-        day = "0"+ str(day)
-    else:
-        day = str(day)
-    return day
+def first_day_of_week (date):
+        '''
+                Get first day of week 
+        '''
+    return (date - datetime.timedelta(days=date.isoweekday() % 7)).replace(hour=0, minute=0, second=0, microsecond=0)
 
-
+def addseconds2datetime(date,seconds):
+        '''
+                Add number of seconds to a date
+        '''
+    ndate = date + datetime.timedelta(seconds=seconds)
+    return ndate

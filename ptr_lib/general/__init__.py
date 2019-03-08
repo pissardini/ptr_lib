@@ -21,8 +21,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from .angleComputations import *
-from .distanceComputations import *
-from .general import *
+from .angles import *
+from .distances import *
+from .math import *
+from .datetime import *
 
-__all__ = ["angleComputations", "distanceComputations", "general"]
+__all__ = ["angles", "distances", "math","datetime"]

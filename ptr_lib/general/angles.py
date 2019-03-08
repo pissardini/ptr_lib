@@ -31,6 +31,8 @@ def angle_between_coordinates (xi, yi, xf, yf):
         return angle
 
 def bearing (lat1,lon1,lat2,lon2):
+    '''return bearing between two points in radians.
+        '''
     y = sin(lon2-lon1) * cos(lat2)
     x = cos(lat1)*sin(lat2)-\
         sin(lat1)*cos(lat2)*\
