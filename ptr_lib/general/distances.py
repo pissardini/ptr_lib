@@ -28,7 +28,7 @@ import datetime
 #Computation of distance
 
 def diff_simple(ai,af):
-    return pow(pow(af-ai,2), 0.5)
+	return pow(pow(af-ai,2), 0.5)
  
 def cartesian_distance (x, y, xf,yf): 
 	distance = pow(pow(xf-x,2)+pow(yf-y,2),0.5)
@@ -43,15 +43,16 @@ def spheric_cosines(lat1,lon1,lat2,lon2,earth_radius=RADIUS_EARTH):
 	return distance
 
 def harvesine (lat1, lon1, lat2,lon2, earth_radius=RADIUS_EARTH):
-    '''Harvesine - return distance between two points in meters
-
-      Input:
+	'''Harvesine - return distance between two points in meters
+	
+	Input:
         - lat1, lon1 : lat,lon of first position
         - lat2, lon2 : lat,lon of second position
-
-      Output:
+	
+	Output:
         - distance in meters
-        '''
+	'''
+	
         lat1 = radians(lat1)
         lat2 = radians(lat2)
         lon1 = radians(lon1)
@@ -68,7 +69,7 @@ def harvesine (lat1, lon1, lat2,lon2, earth_radius=RADIUS_EARTH):
 	distance = earth_radius * c
 	return distance
 	
-def equirec_approximation (lat1, lon1, lat2,lon2, earth_radius): # Equirectangular approximation
+def equirec_approximation (lat1, lon1, lat2,lon2, earth_radius=RADIUS_EARTH): # Equirectangular approximation
 	x = (lon2-lon1) * cos(lat1+lat2)/2
 	y = lat2 - lat1
 	d = pow(x * x + y * y, 0.5) * earth_radius
