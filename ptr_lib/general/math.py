@@ -29,23 +29,23 @@ import datetime
 
 ### Get Integer part from float
 def get_intpart (value): 
-	ipart = modf(value)
-	return ipart[1]
+    ipart = modf(value)
+    return ipart[1]
 
 ### Get fractional part from float
 
 def get_fracpart (value):
-	fpart = modf(value)
-	return fpart[0]
+    fpart = modf(value)
+    return fpart[0]
 
 ### Convert text to number
 
 def str2num (text):
-        try:
-                number = float(text)
-                return number
-        except:
-                return "Error: The string can not be converted to a number"
+    try:
+        number = float(text)
+        return number
+    except:
+        print("Error: The string can not be converted to a number")
 
 
 #Conversions 
