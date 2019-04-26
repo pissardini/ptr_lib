@@ -28,10 +28,10 @@ import datetime
 
 def day_of_year(year,month,day):
         '''
-                Calculate day of year from a date
+        Calculate day of year from a date
         '''
-	doy = datetime.datetime(year, month, day).timetuple().tm_yday
-	return doy
+        doy = datetime.datetime(year, month, day).timetuple().tm_yday
+        return doy
 
 def julian_date(year,month,day,hour,minute,second):
         '''
@@ -59,19 +59,19 @@ def itow2tow(itow_milliseconds):
         '''
                 Convert from interval time of week (iToW) to time of week (ToW)
         '''
-    seconds = itow_milliseconds/1000
-    rest    = itow_milliseconds %1000
-    return [seconds, rest]
+        seconds = itow_milliseconds/1000
+        rest    = itow_milliseconds %1000
+        return [seconds, rest]
 
 def first_day_of_week (date):
         '''
                 Get first day of week 
         '''
-    return (date - datetime.timedelta(days=date.isoweekday() % 7)).replace(hour=0, minute=0, second=0, microsecond=0)
+        return (date - datetime.timedelta(days=date.isoweekday() % 7)).replace(hour=0, minute=0, second=0, microsecond=0)
 
 def addseconds2datetime(date,seconds):
         '''
                 Add number of seconds to a date
         '''
-    ndate = date + datetime.timedelta(seconds=seconds)
-    return ndate
+        ndate = date + datetime.timedelta(seconds=seconds)
+        return ndate

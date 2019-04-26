@@ -31,45 +31,50 @@ def diff_simple(ai,af):
     return pow(pow(af-ai,2), 0.5)
  
 def cartesian_distance (x, y, xf,yf): 
-	distance = pow(pow(xf-x,2)+pow(yf-y,2),0.5)
-	return distance
+    distance = pow(pow(xf-x,2)+pow(yf-y,2),0.5)
+    return distance
 
 def spheric_cosines(lat1,lon1,lat2,lon2,earth_radius=RADIUS_EARTH):
-	delta_lat = lat2 - lat1;
-	delta_lon = lon2 - lon1;
-	distance = acos(sin(radians(lat1))\
-		 * sin(radians(lat2)) +cos(radians(lat1))*\
-		  cos(radians(lat2)) * cos(radians(delta_lon)))* earth_radius
-	return distance
+    delta_lat = lat2 - lat1;
+    delta_lon = lon2 - lon1;
+    distance = acos(sin(radians(lat1))\
+         * sin(radians(lat2)) +cos(radians(lat1))*\
+          cos(radians(lat2)) * cos(radians(delta_lon)))* earth_radius
+    return distance
 
 def harvesine (lat1, lon1, lat2,lon2, earth_radius=RADIUS_EARTH):
+
     '''Harvesine - return distance between two points in meters
 
-      Input:
+    Input:
         - lat1, lon1 : lat,lon of first position
         - lat2, lon2 : lat,lon of second position
-
-      Output:
+    Output:
         - distance in meters
-        '''
-        lat1 = radians(lat1)
-        lat2 = radians(lat2)
-        lon1 = radians(lon1)
-        lon2 = radians(lon2)
 
-	delta_lat = lat2 - lat1
-	delta_lon = lon2 - lon1
-	
-	alpha = delta_lat * 0.5;
-	beta = delta_lon * 0.5;
+    '''
 
-	a = pow(sin(alpha),2) + pow(sin(beta),2)* cos(lat1)* cos(lat2)
-	c = 2 * atan2((a)*0.5, (1-a)*0.5)	
-	distance = earth_radius * c
-	return distance
-	
+    lat1 = radians(lat1)
+    lat2 = radians(lat2)
+    lon1 = radians(lon1)
+    lon2 = radians(lon2)
+
+    delta_lat = lat2 - lat1
+    delta_lon = lon2 - lon1
+
+    alpha = delta_lat * 0.5
+    beta = delta_lon * 0.5
+
+    
+
+    a = pow(sin(alpha),2) + pow(sin(beta),2)* cos(lat1)* cos(lat2)
+    c = 2 * atan2(a*0.5, (1-a)*0.5)
+    distance = earth_radius * c
+
+    return distance
+    
 def equirec_approximation (lat1, lon1, lat2,lon2, earth_radius): # Equirectangular approximation
-	x = (lon2-lon1) * cos(lat1+lat2)/2
-	y = lat2 - lat1
-	d = pow(x * x + y * y, 0.5) * earth_radius
-	return d
+    x = (lon2-lon1) * cos(lat1+lat2)/2
+    y = lat2 - lat1
+    d = pow(x * x + y * y, 0.5) * earth_radius
+    return d
