@@ -84,6 +84,7 @@ def download_zipfile_station(url="http://geoftp.ibge.gov.br/informacoes_sobre_po
     target  -- directory of downloaded file.
 
     """
+
     try:
         
         url = url + str(year)+ "/"+ day_of_year_int2string(day_year) + "/" + station + day_of_year_int2string(day_year)+"1.zip"
@@ -99,6 +100,7 @@ def download_zipfile_station(url="http://geoftp.ibge.gov.br/informacoes_sobre_po
         print ("URL Error:", e.reason, url)
 
 from datetime import date,timedelta
+from ptr_lib.general.datetime import *
 
 def download_zipfile_station_range(day_start   =1,
                                    month_start =1,
@@ -132,18 +134,14 @@ def download_zipfile_station_range(day_start   =1,
 
     if d0<=d1:
         year_control = year_start
-        while d0<d1:
+        while d0<=d1:
             if d0 == 1:
                 year_control +=1
             try:
-                print("Ok")
-                download_zipfile_station(url=url,
-                                 year = year_control,
-                                 day_year = day_of_year(d0.year,d0.month,d0.day),
-                                 station  = station,
-                                 target= target)
+                download_zipfile_station(url,year_control,day_of_year(d0.year,d0.month,d0.day), station, target)
             except:
                 print("Could not download file from day "+ str(d0)+" from station "+ station)
+                
             d0 += timedelta(days=1)
 
     else:
