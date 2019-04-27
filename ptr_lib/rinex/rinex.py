@@ -100,7 +100,6 @@ def download_zipfile_station(url="http://geoftp.ibge.gov.br/informacoes_sobre_po
 
 from datetime import date,timedelta
 from .ptr_lib.general.datetime import *
-from .ptr_lib.rinex.rinex import *
 
 def download_zipfile_station_range(day_start   =1,
                                    month_start =1,
