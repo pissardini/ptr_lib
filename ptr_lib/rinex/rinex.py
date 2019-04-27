@@ -99,7 +99,6 @@ def download_zipfile_station(url="http://geoftp.ibge.gov.br/informacoes_sobre_po
         print ("URL Error:", e.reason, url)
 
 from datetime import date,timedelta
-from .ptr_lib.general.datetime import *
 
 def download_zipfile_station_range(day_start   =1,
                                    month_start =1,
