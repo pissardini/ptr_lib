@@ -49,6 +49,18 @@ def day_of_year_int2string(day):
         day = str(day)
     return day
 
+def fixed_int2string(number,size):
+    if len(str(number))<size:
+        diff = size - len(str(number))
+        str_number=""
+        for i in range(0,diff):
+            str_number +="0"
+        return str_number+ str(number)
+    elif len(str(number))== size:
+        return str(number)
+    else:
+        print("Error: Size must be lower than the number of digits in the number")
+        return False
 
 #Download zip file from stations
 
@@ -68,7 +80,7 @@ def download_zipfile_station(url="http://geoftp.ibge.gov.br/informacoes_sobre_po
 
     url  -- url of zipfile (default: IBGE)
     year -- year of zipfile
-    station -- abbreviation of station (default: poli)
+    station -- abbreviation of station (4 chars)(default: poli)
     target  -- directory of downloaded file.
 
     """
@@ -86,6 +98,109 @@ def download_zipfile_station(url="http://geoftp.ibge.gov.br/informacoes_sobre_po
     except urllib.error.URLError as e:
         print ("URL Error:", e.reason, url)
 
+from datetime import date,timedelta
+from .ptr_lib.general.datetime import *
+from .ptr_lib.rinex.rinex import *
+
+def download_zipfile_station_range(day_start   =1,
+                                   month_start =1,
+                                   year_start  =2019,
+                                   day_end     =3,
+                                   month_end   =1,
+                                   year_end    = 2019,
+                                   url         ="http://geoftp.ibge.gov.br/informacoes_sobre_posicionamento_geodesico/rbmc/dados/",
+                                   station     = "poli",
+                                   target      =""):
+
+    """Download zipfiles from a station in a range of two dates.
+
+    Keyword arguments:
+
+    day_start -- day of first date
+    month_start -- month of first date
+    year_start -- year of first date
+    day_end -- day of second date
+    month_end -- month of second date
+    year_end -- year of second date
+    url  -- url of zipfile (default: IBGE)
+    year -- year of zipfile
+    station -- abbreviation of station (4 chars) (default: poli)
+    target  -- directory of downloaded files.
+
+    """
+    
+    d0 = date(year_start, month_start, day_start)
+    d1 = date(year_end, month_end, day_end)
+
+    if d0<=d1:
+        year_control = year_start
+        while d0<d1:
+            if d0 == 1:
+                year_control +=1
+            try:
+                print("Ok")
+                download_zipfile_station(url=url,
+                                 year = year_control,
+                                 day_year = day_of_year(d0.year,d0.month,d0.day),
+                                 station  = station,
+                                 target= target)
+            except:
+                print("Could not download file from day "+ str(d0)+" from station "+ station)
+            d0 += timedelta(days=1)
+
+    else:
+        print("The first date is greater than the second date.")
+
+
+#downloading observations files
+
+def get_observations_files(week,
+                    day,
+                    products = 'F',
+                    target = '',
+                    url ='ftp://gssc.esa.int/gnss/products/'):
+
+    """Download observations files from IGS 
+
+    Keyword arguments:
+
+    week  -- GPS Week
+    day   -- day of week (0-6)
+    products   -- type of products (F- final) 
+    target -- directory of downloaded files
+    url -- url of observations files
+    """
+    
+    try:
+        url += fixed_int2string(week,4)+"/"
+
+        if obs in ['F','f']:
+            print(url)
+            url = url +'igs'+ fixed_int2string(week,4)+ str(day)
+            clock = url + '.clk.Z'
+            sp3 = url + '.sp3.Z'
+
+        print("Downloading: " + clock)
+        
+        with urllib.request.urlopen(clock) as response, open(target + os.path.basename(clock), 'wb') as out_file:
+            shutil.copyfileobj(response, out_file)
+        print("Completed. Target : " + target + os.path.basename(clock))
+
+        print("Downloading: " + sp3)
+        
+        with urllib.request.urlopen(sp3) as response, open(target + os.path.basename(sp3), 'wb') as out_file:
+            shutil.copyfileobj(response, out_file)
+        print("Completed. Target : " + target + os.path.basename(sp3))
+
+
+    except urllib.error.HTTPError as e:
+
+        print ("HTTP Error:", e.code, url)
+
+    except urllib.error.URLError as e:
+
+        print ("URL Error:", e.reason, url)
+        
     
 #extracting files from zip file 
 
@@ -104,7 +219,7 @@ def extracting_zipfile(origin,target):
 
     """
 
-    for zfile in glob.glob(directory + "/*.zip"):
+    for zfile in glob.glob(origin + "/*.zip"):
         try:
             with zipfile.ZipFile(zfile,"r") as zip_ref:
                 nfile = target + os.path.basename(zfile)
@@ -115,7 +230,6 @@ def extracting_zipfile(origin,target):
         except:
             print ( "Error in file: " + zfile)
             pass
-
 
 #### Conversion files
 

@@ -23,6 +23,8 @@
 
 #Computation of date and time
 
+import datetime
+
 def day_of_year(year,month,day):
     '''
     Calculate day of year from a date
@@ -72,6 +74,13 @@ def addseconds2datetime(date,seconds):
     '''
     ndate = date + datetime.timedelta(seconds=seconds)
     return ndate
+
+def gps_week(day,month,year):
+    '''
+    Calculate GPS Week from day, month, year
+    '''
+    delta = date(year,month,day) - date(1980, 1, 6)
+    return int(delta.days/7), delta.days % 7
 
 
 
