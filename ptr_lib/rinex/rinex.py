@@ -1,7 +1,6 @@
 # -*- coding: cp1252 -*-
-
 #
-# Copyright (c) 2014-2019 R.Pissardini <rodrigo AT pissardini DOT com>
+# Copyright (c) 2014-2020 R.Pissardini <rodrigo AT pissardini DOT com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -28,18 +27,14 @@
 #convert day-int to day-str with 3 char
 
 def day_of_year_int2string(day):
-
     """Convert from day of year in int format to string format with three chars.
 
         Keyword arguments:
+	        day  -- day in int format
 
-        day  -- day in int format
-
-        Output:
-        
-        day  -- day in char format
+        Output:        
+	        day  -- day in char format
     """
-
 
     if day <10:
         day = "00"+ str(day)
@@ -50,6 +45,14 @@ def day_of_year_int2string(day):
     return day
 
 def fixed_int2string(number,size):
+    """Convert from int to a string with fixed size.
+
+        Keyword arguments:
+	        number  -- in int format
+
+        Output:        
+	        size  -- size of string 
+    """
     if len(str(number))<size:
         diff = size - len(str(number))
         str_number=""
@@ -78,11 +81,11 @@ def download_zipfile_station(url="http://geoftp.ibge.gov.br/informacoes_sobre_po
 
     Keyword arguments:
 
-    url  -- url of zipfile (default: IBGE)
-    year -- year of zipfile
-    station -- abbreviation of station (4 chars)(default: poli)
-    target  -- directory of downloaded file.
-
+	    url  -- url of zipfile (default: IBGE)
+	    year -- year of zipfile
+	    station -- abbreviation of station (4 chars)(default: poli)
+	    target  -- directory of downloaded file.
+	    
     """
 
     try:
@@ -116,17 +119,16 @@ def download_zipfile_station_range(day_start   =1,
 
     Keyword arguments:
 
-    day_start -- day of first date
-    month_start -- month of first date
-    year_start -- year of first date
-    day_end -- day of second date
-    month_end -- month of second date
-    year_end -- year of second date
-    url  -- url of zipfile (default: IBGE)
-    year -- year of zipfile
-    station -- abbreviation of station (4 chars) (default: poli)
-    target  -- directory of downloaded files.
-
+	    day_start -- day of first date
+	    month_start -- month of first date
+	    year_start -- year of first date
+	    day_end -- day of second date
+	    month_end -- month of second date
+	    year_end -- year of second date
+	    url  -- url of zipfile (default: IBGE)
+	    year -- year of zipfile
+	    station -- abbreviation of station (4 chars) (default: poli)
+	    target  -- directory of downloaded files.
     """
     
     d0 = date(year_start, month_start, day_start)
@@ -160,17 +162,17 @@ def get_observations_files(week,
 
     Keyword arguments:
 
-    week  -- GPS Week
-    day   -- day of week (0-6)
-    products   -- type of products (F- final) 
-    target -- directory of downloaded files
-    url -- url of observations files
+	    week  -- GPS Week
+	    day   -- day of week (0-6)
+	    products   -- type of products (F- final) 
+	    target -- directory of downloaded files
+	    url -- url of observations files
     """
     
     try:
         url += fixed_int2string(week,4)+"/"
 
-        if obs in ['F','f']:
+        if products in ['F','f']:
             print(url)
             url = url +'igs'+ fixed_int2string(week,4)+ str(day)
             clock = url + '.clk.Z'
@@ -187,7 +189,6 @@ def get_observations_files(week,
         with urllib.request.urlopen(sp3) as response, open(target + os.path.basename(sp3), 'wb') as out_file:
             shutil.copyfileobj(response, out_file)
         print("Completed. Target : " + target + os.path.basename(sp3))
-
 
     except urllib.error.HTTPError as e:
 
@@ -210,9 +211,8 @@ def extracting_zipfile(origin,target):
 
     Keyword arguments:
 
-    origin  -- original path  of zip(s) file(s)
-    target  -- target path of uncompressed file 
-
+	    origin  -- original path  of zip(s) file(s)
+	    target  -- target path of uncompressed file
     """
 
     for zfile in glob.glob(origin + "/*.zip"):
@@ -229,23 +229,24 @@ def extracting_zipfile(origin,target):
 
 #### Conversion files
 
-
 import subprocess
 
-def hatakana2rinex(rnxcmp,  #path of rnxcmp program 
+def hatakana2rinex(rnxcmp = None,  #path of rnxcmp program 
                    file_d): #path of .d file
         
     """Convert from Hatakana to Rinex - RNXCMP is required - http://terras.gsi.go.jp/ja/crx2rnx.html 
 
     Keyword arguments:
 
-    rnxcmp  -- path of rnxcmp executable 
-    file_d  -- path of .d file for conversion 
+	    rnxcmp  -- path of rnxcmp executable 
+	    file_d  -- path of .d file for conversion 
 
     """
-    
-    cmd = rnxcmp+ " "+ file_d
-    subprocess.call(cmd, shell=True)
+    if rnxcmp is None:
+        print ("Rnxcmp is not available.")
+    else:
+        cmd = rnxcmp + " "+ file_d
+        subprocess.call(cmd, shell=True)
 
 
 ### Analysis and processing RINEX
@@ -254,53 +255,76 @@ def hatakana2rinex(rnxcmp,  #path of rnxcmp program
 from subprocess import check_output
 
 
-def rinex_metadata(teqc,file_o):
+def rinex_metadata(teqc = None,
+                   file_o):
     
     """Get Rinex Metadata
         Teqc is required for processing - https://www.unavco.org/software/data-processing/teqc/teqc.html
 
         Keyword arguments:
 
-        teqc    -- path of teqc executable 
-        file_d  -- path of .d file for conversion
+		teqc    -- path of teqc executable 
+		file_o  -- input .o file
 
         Output:
-        out     -- metadata with \r\n 
+		out     -- metadata with \r\n 
     """
-    
-    out = check_output([teqc,"+meta",file_o])
-    return out
+
+    if teqc is None:
+        print ("Teqc is not available.")
+    else:
+        out = check_output([teqc,"+meta",file_o])
+        return out
 
 
-def rinex_summary(teqc,file_o): 
+def rinex_summary(teqc = None,
+                  file_o): 
 
     """Get Rinex Summary
         Teqc is required for processing - https://www.unavco.org/software/data-processing/teqc/teqc.html
 
         Keyword arguments:
 
-        teqc    -- path of teqc executable 
-        file_o  -- path of .o file
+		teqc    -- path of teqc executable 
+		file_o  -- input .o file
 
         Output:
-        out     -- summary with \r\n 
+		out     -- summary with \r\n 
     """
 
-    
-    out = check_output([teqc,"-O.sum",".",file_o])
-    return out
+    if teqc is None:
+        print ("Teqc is not available.")
+    else:    
+        out = check_output([teqc,"-O.sum",".",file_o])
+        return out
 
 # Get quality from rinex files
 
-def rinex_quality(teqc,file_o):  # tecq - path of TEQC   file_o - observable file 
-    out = check_output([teqc,"+qc",file_o])
-    return out
+def rinex_quality(teqc = None,
+                  file_o):  # tecq - path of TEQC   file_o - observable file
+                  
+    """Get quality from rinex files
+       Teqc is required for processing - https://www.unavco.org/software/data-processing/teqc/teqc.html
+
+        Keyword arguments:
+
+		teqc    -- path of teqc executable 
+		file_o  -- input .o file
+
+        Output:
+		out     -- summary with \r\n 
+    """
+    if teqc is None:
+        print ("Teqc is not available.")
+    else:
+        out = check_output([teqc,"+qc",file_o])
+        return out
 
 #Exclude constellations
 
 import subprocess
 
-def rinex_exclude_constellations(teqc,
+def rinex_exclude_constellations(teqc = None,
                                  file_o,
                                  target,
                                  gps     = True,
@@ -310,30 +334,57 @@ def rinex_exclude_constellations(teqc,
                                  beidou  = True,
                                  qzss    = True
                                  ):
-    constellations =""
-    if gps is False:
-        constellations = constellations + "-G "
-    if glonass is False:
-        constellations = constellations + "-R "
-    if sbas is False:
-        constellations = constellations + "-S "
-    if galileo is False:
-        constellations = constellations + "-E "
-    if beidou is False:
-        constellations = constellations + "-C "
-    if qzss is False:
-        constellations = constellations + "-J "
+    """Exclude constellations from rinex files
+       Teqc is required for processing - https://www.unavco.org/software/data-processing/teqc/teqc.html
 
-    try:
-        cmd = teqc + " " +constellations[:-1] +" "+ file_o + " > " + target + os.path.basename(file_o)+".PROCESSED"
-        subprocess.call(cmd, shell=True)
-        print("Conversion RINEX terminated : " + target + os.path.basename(file_o)+".PROCESSED")
-    except:
-        print("Error in RINEX.")
+        Keyword arguments:
+
+		teqc    -- path of teqc executable 
+		file_o  -- input .o file
+		target  -- path of output file
+                gps     -- True (default) or False
+                glonass -- True (default) or False
+                sbas    -- True (default) or False
+                galileo -- True (default) or False
+                beidou  -- True (default) or False
+                qzss    -- True (default) or False
+        Output:
+		out     -- summary with \r\n 
+    """
+    
+    if teqc is None:
+        print ("Teqc is not available.")
+    else:
+        constellations =""
+        if gps is False:
+            constellations = constellations + "-G "
+        if glonass is False:
+            constellations = constellations + "-R "
+        if sbas is False:
+            constellations = constellations + "-S "
+        if galileo is False:
+            constellations = constellations + "-E "
+        if beidou is False:
+            constellations = constellations + "-C "
+        if qzss is False:
+            constellations = constellations + "-J "
+
+        try:
+            cmd = teqc + " " +constellations[:-1] +" "+ file_o + " > " + target + os.path.basename(file_o)+".PROCESSED"
+            subprocess.call(cmd, shell=True)
+            print("Conversion RINEX terminated : " + target + os.path.basename(file_o)+".PROCESSED")
+        except:
+            print("Error in RINEX.")
         
 #Transform output of tecq in a human readable text
 
 def rinex_human_readable(out):
+    """Transform output of tecq in a human readable text
+
+        Keyword arguments:
+		out     -- file for conversion
+
+    """
     ls =[]
     ls = out.decode("utf-8").split("\r\n")
     for i in ls:
@@ -341,68 +392,114 @@ def rinex_human_readable(out):
 
 #Exclude satellites from file .o 
 
-def rinex_exclude_satellites(teqc,
+def rinex_exclude_satellites(teqc = None,
                              file_o,
                              target,
-                             satellites): #input: list of satellites and number ['G01,G02,...]'
-
-    print("Excluding: "+ str(satellites))
-    sats ="-"
-    for i in satellites:
-        if i[0] in ['G','R','S','E','C','J']:
-            sats = sats + i + ","
-    print(sats)
-    try:
-        cmd = teqc + " " + sats[:-1] + " " + file_o + " > " + target + os.path.basename(file_o)+".PROCESSED"
-        subprocess.call(cmd, shell=True)
-        print("Conversion RINEX terminated : " + target + os.path.basename(file_o)+".PROCESSED")
-    except:
-        print("Error in RINEX.")
-
-# Set mask of elevation from file .o
-
-def rinex_mask( teqc,
-                file_o,
-                target,
-                mask):
-    if mask>=0.0 and mask<=90.0:
+                             satellites): 
+    """ Exclude satellites from file .o
+        Teqc is required for processing - https://www.unavco.org/software/data-processing/teqc/teqc.html
+        Keyword arguments:
+		teqc       -- path of teqc executable 
+		file_o     -- input .o file
+		target     -- path of output file
+                satellites -- list of satellites in format ["G01","G02",...] 
+    """
+    if teqc is None:
+        print ("Teqc is not available.")
+    else:
+        print("Excluding: "+ str(satellites))
+        sats ="-"
+        for i in satellites:
+            if i[0] in ['G','R','S','E','C','J']:
+                sats = sats + i + ","
+        print(sats)
         try:
-            cmd = teqc + "  -set_mask " + str(mask)  + " " + file_o + " > " + target + os.path.basename(file_o)+".PROCESSED"
-            print(cmd)
+            cmd = teqc + " " + sats[:-1] + " " + file_o + " > " + target + os.path.basename(file_o)+".PROCESSED"
             subprocess.call(cmd, shell=True)
             print("Conversion RINEX terminated : " + target + os.path.basename(file_o)+".PROCESSED")
         except:
             print("Error in RINEX.")
 
+# Set mask of elevation from file .o
+
+def rinex_mask( teqc = None,
+                file_o,
+                target,
+                mask):
+    """ Set mask of elevation from file .o
+        Teqc is required for processing - https://www.unavco.org/software/data-processing/teqc/teqc.html
+        
+        Keyword arguments:
+		teqc       -- path of teqc executable 
+		file_o     -- input file
+		target     -- path of output file
+                mask       -- mask of elevation (from 0 to 90)
+    """
+    if teqc is None:
+        print ("Teqc is not available.")
+    else:
+        if mask>=0.0 and mask<=90.0:
+            try:
+                cmd = teqc + "  -set_mask " + str(mask)  + " " + file_o + " > " + target + os.path.basename(file_o)+".PROCESSED"
+                print(cmd)
+                subprocess.call(cmd, shell=True)
+                print("Conversion RINEX terminated : " + target + os.path.basename(file_o)+".PROCESSED")
+            except:
+                print("Error in RINEX.")
+
 # Set mask of datetime limits from file .o
 
-def rinex_datetime( teqc,
+def rinex_datetime( teqc = None,
                     file_o,
                     target,
                     datetime_start = "2016_01_01:01:00:00",
                     datetime_end = "2016_01_01:23:59:59"):
-    try:
-        cmd = teqc + " -st " + str(datetime_start)  + " -e " + str(datetime_end)+ " " + file_o + " > " + target + os.path.basename(file_o)+".PROCESSED"
-        print(cmd)
-        subprocess.call(cmd, shell=True)
-        print("Conversion RINEX terminated : " + target + os.path.basename(file_o)+".PROCESSED")
-    except:
-        print("Error in RINEX.")
-
-# Set interval in seconds from file .o
-
-def rinex_interval( teqc,
-                    file_o,
-                    target,
-                    interval=1.0):
-    if interval >= 1.0:
+    """ Set mask of datetime limits from file .o
+        Teqc is required for processing - https://www.unavco.org/software/data-processing/teqc/teqc.html
+        
+        Keyword arguments:
+		teqc           -- path of teqc executable 
+		file_o         -- input file
+		target         -- path of output file
+                datetime_start -- "2016_01_01:01:00:00" (default) 
+                datetime_end   -- "2016_01_01:23:59:59"    (default)
+    """
+    if teqc is None:
+        print ("Teqc is not available.")
+    else:
         try:
-            cmd = teqc + " -O.dec " + str(interval)  + " " + file_o + " > " + target + os.path.basename(file_o)+".PROCESSED"
+            cmd = teqc + " -st " + str(datetime_start)  + " -e " + str(datetime_end)+ " " + file_o + " > " + target + os.path.basename(file_o)+".PROCESSED"
             print(cmd)
             subprocess.call(cmd, shell=True)
             print("Conversion RINEX terminated : " + target + os.path.basename(file_o)+".PROCESSED")
         except:
             print("Error in RINEX.")
-    else:
-        print("Use interval >=1.0")
 
+# Set interval in seconds from file .o
+
+def rinex_interval( teqc = None,
+                    file_o,
+                    target,
+                    interval=1.0):
+    """ Set interval in seconds from file .o
+        Teqc is required for processing - https://www.unavco.org/software/data-processing/teqc/teqc.html
+        
+        Keyword arguments:
+		teqc           -- path of teqc executable 
+		file_o         -- input file
+		target         -- path of output file
+                interval       -- in decimal format (default:1.0)
+    """
+    if teqc is None:
+        print ("Teqc is not available.")
+    else:
+        if interval >= 1.0:
+            try:
+                cmd = teqc + " -O.dec " + str(interval)  + " " + file_o + " > " + target + os.path.basename(file_o)+".PROCESSED"
+                print(cmd)
+                subprocess.call(cmd, shell=True)
+                print("Conversion RINEX terminated : " + target + os.path.basename(file_o)+".PROCESSED")
+            except:
+                print("Error in RINEX.")
+        else:
+            print("Use interval >=1.0")

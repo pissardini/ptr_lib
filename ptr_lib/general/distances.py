@@ -1,7 +1,7 @@
 # -*- coding: cp1252 -*-
 
 #
-# Copyright (c) 2014-2019 R.Pissardini <rodrigo AT pissardini DOT com>
+# Copyright (c) 2014-2020 R.Pissardini <rodrigo AT pissardini DOT com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -26,11 +26,20 @@ from ptr_lib.constants import RADIUS_EARTH
 import datetime
 
 #Computation of distance
-
-def diff_simple(ai,af):
-    return pow(pow(af-ai,2), 0.5)
  
-def cartesian_distance (x, y, xf,yf): 
+def cartesian_distance (x,
+                        y,
+                        xf,
+                        yf):
+    ''' Cartesian distance between two points
+
+        Keyword arguments:
+	        x, y     -- x,y of first position
+                xf, xy   -- x,y of second position
+        Output:        
+	        distance -- in units
+
+    '''
     distance = pow(pow(xf-x,2)+pow(yf-y,2),0.5)
     return distance
 
@@ -42,16 +51,20 @@ def spheric_cosines(lat1,lon1,lat2,lon2,earth_radius=RADIUS_EARTH):
           cos(radians(lat2)) * cos(radians(delta_lon)))* earth_radius
     return distance
 
-def harvesine (lat1, lon1, lat2,lon2, earth_radius=RADIUS_EARTH):
-    
-    '''Harvesine - return distance between two points in meters
-    
-    Input:
-        - lat1, lon1 : lat,lon of first position
-        - lat2, lon2 : lat,lon of second position
-        
-    Output:
-        - distance in meters
+def harvesine (lat1,
+               lon1,
+               lat2,
+               lon2,
+               earth_radius=RADIUS_EARTH):
+    ''' Harvesine - return distance between two points in meters
+
+        Keyword arguments:
+	        lat1, lon1   -- lat,lon of first position
+                lat2, lon2   -- lat,lon of second position
+                earth_radius -- Earth's radius (default:6378137.0)
+        Output:        
+	        distance   -- distance in meters
+
     '''
 
     lat1 = radians(lat1)
@@ -76,4 +89,19 @@ def equirec_approximation (lat1, lon1, lat2,lon2, earth_radius=RADIUS_EARTH): # 
     y = lat2 - lat1
     d = pow(x * x + y * y, 0.5) * earth_radius
     return d
+
+
+def great_circle_vec(lat1, lon1, lat2, lon2, earth_radius=RADIUS_EARTH):
+    
+    d_phi =radians(lat2) - radians(lat1)
+    d_theta = radians(log2) - radians(log1)
+
+    h = np.sin(d_phi / 2) ** 2 + np.cos(phi1) * np.cos(phi2) * np.sin(d_theta / 2) ** 2
+    h = np.minimum(1.0, h)  # protect against floating point errors
+
+    arc = 2 * np.arcsin(np.sqrt(h))
+
+    # return distance in units of earth_radius
+    distance = arc * earth_radius
+    return distance
 
