@@ -23,4 +23,4 @@
 
 from .skyplot import *
 
-__all__ = ["skyplot"]
+__all__ = ['skyplot']

@@ -1,11 +1,11 @@
 from setuptools import setup, find_packages
  
 setup(name='ptr_lib',
-      version='0.0.1',
+      version='0.0.2dev',
       url='https://github.com/pissardini/ptr_lib',
       license='MIT',
-      author='R.S.Pissardini, A. Boava',
-      author_email='pissardini@usp.br,alex.boava@usp.br',
+      author='R.S.Pissardini',
+      author_email='pissardini@usp.br',
       description='A library of resources for Transportation, Geomatics and GNSS Analysis.',
       maintainer="Laboratory of Topography and Geodesy - University of Sao Paulo",
       packages=find_packages(exclude=['tests']),

@@ -1,7 +1,7 @@
 # -*- coding: cp1252 -*-
 
 #
-# Copyright (c) 2014-2018 R.Pissardini <rodrigo AT pissardini DOT com>
+# Copyright (c) 2012-2020 R.Pissardini <rodrigo AT pissardini DOT com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ import datetime
 
 import matplotlib.pyplot as plt
 
-def skyplot (prn,e,az): #input lists of prn (or svid), elevation and azimuths 
+def skyplot_gnss (prn,e,az): #input lists of prn (or svid), elevation and azimuths 
 
     ax = plt.subplot(111, projection='polar')
     ax.set_theta_zero_location("N")

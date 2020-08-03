@@ -22,34 +22,44 @@
 # THE SOFTWARE.
 
 from math import *
-from ptr_lib.constants import RADIUS_EARTH
+from ptr_lib.general.constants import RADIUS_EARTH
 import datetime
 
 
-#Computation of distances
- 
-def cartesian_distance (x,
-                        y,
-                        xf,
-                        yf,
+def cartesian_distance (lat1,
+                        lon1,
+                        lat2,
+                        lon2,
                         earth_radius=RADIUS_EARTH):
     
+    ''' Cartesian distance between two coordinates
+        Keyword arguments:
+                lat1, lon1   -- lat,lon of first position
+                lat2, lon2   -- lat,lon of second position
+                earth_radius -- Earth's radius (default:6378137.0)
+        Output:        
+	        distance -- in meters
+    '''
+    lat1 = radians(lat1)
+    lat2 = radians(lat2)
+    lon1 = radians(lon1)
+    lon2 = radians(lon2)
+    
+    return sqrt(pow(lat2-lat1,2)+ pow(lon2-lon1,2))* earth_radius
+
+def cartesian_xy(x1,
+                 y1,
+                 x2,
+                 y2):
     ''' Cartesian distance between two points
 
         Keyword arguments:
-	        x, y     -- x,y of first position
-                xf, xy   -- x,y of second position
-                earth_radius -- Earth's radius (default:6378137.0)
+	        x1, y1     -- x,y of first position
+                x2, y2     -- x,y of second position
         Output:        
 	        distance -- in units
-
     '''
-    x  = radians(x)
-    y  = radians(y)
-    xf = radians(xf)
-    yf = radians(yf)
-    
-    return sqrt(pow(xf-x,2)+ pow(yf-y,2))* earth_radius
+    return sqrt(pow(x2-x,1)+ pow(y2-y1,2))
 
 def spherical_cosines(lat1,
                       lon1,

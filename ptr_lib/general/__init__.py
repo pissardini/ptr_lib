@@ -1,7 +1,7 @@
 # -*- coding: cp1252 -*-
 
 #
-# Copyright (c) 2014-2018 R.Pissardini <rodrigo AT pissardini DOT com>
+# Copyright (c) 2014-2020 R.Pissardini <rodrigo AT pissardini DOT com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,9 +21,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+from .constants import *
 from .angles import *
 from .distances import *
 from .math import *
 from .datetime import *
+from .utils import *
 
-__all__ = ["angles", "distances", "math","datetime"]
+__all__ = ['constants',
+           'angles',
+           'distances',
+           'math',
+           'datetime',
+           'utils']

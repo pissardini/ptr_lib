@@ -1,7 +1,7 @@
 # -*- coding: cp1252 -*-
 
 #
-# Copyright (c) 2014-2019 R.Pissardini <rodrigo AT pissardini DOT com>
+# Copyright (c) 2012-2020 R.Pissardini <rodrigo AT pissardini DOT com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 
 
 import numpy as np
-from ptr_lib.constants import GPS_PI
+from ptr_lib.general.constants import GPS_PI
 
 class Ellipsoid:
     def __init__(self,                        #Default values for GRS80

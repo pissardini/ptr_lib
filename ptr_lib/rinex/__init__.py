@@ -1,7 +1,7 @@
 # -*- coding: cp1252 -*-
 
 #
-# Copyright (c) 2014-2020 R.Pissardini <rodrigo AT pissardini DOT com>
+# Copyright (c) 2012-2020 R.Pissardini <rodrigo AT pissardini DOT com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -23,4 +23,4 @@
 
 from .rinex import *
 
-__all__ = ["rinex"]
+__all__ = ['rinex']

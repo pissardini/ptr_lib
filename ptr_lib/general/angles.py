@@ -1,7 +1,7 @@
 # -*- coding: cp1252 -*-
 
 #
-# Copyright (c) 2014-2018 R.Pissardini <rodrigo AT pissardini DOT com>
+# Copyright (c) 2014-2020 R.Pissardini <rodrigo AT pissardini DOT com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +22,30 @@
 # THE SOFTWARE.
 
 from math import *
-import datetime
 
-#Computation of angles
-
-def angle_between_coordinates (xi, yi, xf, yf):
+def angle_xy (xi,
+              yi,
+              xf,
+              yf):
+    '''return angle between two points.
+    '''
         angle = atan2(yf -yi, xf -xi)
         return angle
 
-def bearing (lat1,lon1,lat2,lon2):
-    '''return bearing between two points in radians.
+def bearing (lat1,
+             lon1,
+             lat2,
+             lon2):
+    '''return bearing between two points in radians. This formula is
+       for the initial bearing.
         '''
+    lat1 = radians(lat1)
+    lon1 = radians(lon1)
+    lat2 = radians(lat2)
+    lon2 = radians(lon2)
+
     y = sin(lon2-lon1) * cos(lat2)
-    x = cos(lat1)*sin(lat2)-\
-        sin(lat1)*cos(lat2)*\
-        cos(lon2-lon1)
-    b = atan2(y,x) #radians
+    x = cos(lat1)*sin(lat2)- sin(lat1)*cos(lat2)* cos(lon2-lon1)
+    b = atan2(y,x)
+    
     return b
