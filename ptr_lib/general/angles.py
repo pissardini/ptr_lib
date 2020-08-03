@@ -29,7 +29,7 @@ def angle_xy (xi,
               yf):
     '''return angle between two points.
     '''
-        angle = atan2(yf -yi, xf -xi)
+        angle = atan2(yf - yi, xf - xi)
         return angle
 
 def bearing (lat1,
@@ -45,7 +45,9 @@ def bearing (lat1,
     lon2 = radians(lon2)
 
     y = sin(lon2-lon1) * cos(lat2)
-    x = cos(lat1)*sin(lat2)- sin(lat1)*cos(lat2)* cos(lon2-lon1)
+    x = cos(lat1) * sin(lat2) -\
+        sin(lat1) * cos(lat2) *\
+        cos(lon2-lon1)
     b = atan2(y,x)
     
     return b

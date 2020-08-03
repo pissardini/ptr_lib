@@ -6,7 +6,6 @@ A library in Python of resources for Geomatics, GNSS Analysis and Transportation
 
 Authors: 
 * R.Pissardini - B.Sc.Computer Science, M.Sc. Transportation Engineering
-* A.Boava Meza
 -------------
 
 # Installation
