@@ -22,23 +22,22 @@
 # THE SOFTWARE.
 
 
-import numpy as np
 from ptr_lib.general.constants import GPS_PI
 
 class Ellipsoid:
     def __init__(self,                        #Default values for GRS80
-                 a = 6378137,
-                 b = 6356752.314140347,
-                 f = 0.003352810681183637418,
-                 e2=0.00669438002290):
+                 a  = 6378137,
+                 b  = 6356752.314140347,
+                 f  = 0.003352810681183637418,
+                 e2 = 0.00669438002290):
         
-        self.a = a
-        self.b = b
-        self.f = f                             # flattening
-        self.e2 = e2                           # eccentricity squared
-        self.e = pow(e2,0.5)                   # eccentricity
+        self.a   = a
+        self.b   = b
+        self.f   = f                             # flattening
+        self.e2  = e2                           # eccentricity squared
+        self.e   = pow(e2,0.5)                   # eccentricity
         self.e12 = self.e2 / (1 - self.e2)     # 2nd eccentricity squared
-        self.e1 = pow(self.e12,0.5)            # 2nd eccentricity
+        self.e1  = pow(self.e12,0.5)            # 2nd eccentricity
 
     @property
     def equatorial_radius(self):

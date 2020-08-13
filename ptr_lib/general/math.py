@@ -22,67 +22,41 @@
 # THE SOFTWARE.
 
 from math import *
-import datetime
 
 
-#General functions 
+def get_intpart (number):
+    """ Get the integer part of a float number. 
 
-### Get Integer part from float
-def get_intpart (value): 
-    ipart = modf(value)
+        Keyword arguments:
+	        number -- input number
+        Output:
+                ipart  -- integer part
+    """
+    ipart = modf(number)
     return ipart[1]
 
-### Get fractional part from float
 
-def get_fracpart (value):
-    fpart = modf(value)
+def get_fracpart (number):
+    """ Get the fractional part of a float number. 
+
+        Keyword arguments:
+	        number -- input number
+        Output:
+                fpart  -- decimal part
+    """
+    fpart = modf(number)
     return fpart[0]
 
-### Convert text to number
-
 def str2num (text):
+    """ Convert string to number. 
+
+        Keyword arguments:
+	        text    -- number in string format
+        Output:
+                number  -- number converted
+    """
     try:
         number = float(text)
         return number
     except:
         print("Error: The string can not be converted to a number")
-
-
-#Conversions 
-
-def arcsec2radians (seconds):
-    radians = seconds * 0.000004848
-    return radians
-
-def radians2arcsec (radians):
-    seconds = radians * 206264.806247096
-    return seconds
-
-def dms2decimal (degrees, minutes, seconds, direction): #direction - N- S- W- E
-    if (direction=='S' or direction=='W'):
-        signal = -1
-    elif (direction=='N' or direction=='E'):
-        signal = 1
-    else:
-        print('[Error] Insert a correct direction [ N, S, W or E]\n')
-        return
-    
-    decimal = signal * (int(degrees) + float(minutes) / 60 + float(seconds) / 3600)
-    
-    return decimal
-    
-def decimal2dms (decimal, direction): #N- E
-    degrees = int(decimal)
-    minutes = int (abs((decimal - int(decimal)) * 60))
-    seconds = abs((abs((decimal - int(decimal)) * 60)-minutes)*60)
-                  
-    if (direction=='N'):
-        if (decimal <0):
-            direction ='S'
-    elif (direction =='E'):
-        if (decimal <0):
-            direction ='W'
-    else:
-        print('[Error] Insert a correct direction [N or E]\n')
-        return
-    return [degrees,minutes,seconds,direction]

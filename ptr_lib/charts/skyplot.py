@@ -21,15 +21,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from math import *
-import datetime
-
-#skyplot and other charts 
 
 import matplotlib.pyplot as plt
 
-def skyplot_gnss (prn,e,az): #input lists of prn (or svid), elevation and azimuths 
-
+def skyplot_gnss (prn,e,az):
+    """
+    Generate a skyplot from gnss data
+    """
     ax = plt.subplot(111, projection='polar')
     ax.set_theta_zero_location("N")
     ax.set_theta_direction(-1)

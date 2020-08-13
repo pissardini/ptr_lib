@@ -22,13 +22,9 @@
 # THE SOFTWARE.
 
 
-
-####General functions
-
-#convert day-int to day-str with 3 char
-
 def day_of_year_int2string(day):
-    """Convert from day of year in int format to string format with three chars.
+    """
+        Convert from day of year in int format to string format with three chars.
 
         Keyword arguments:
 	        day  -- day in int format

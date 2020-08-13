@@ -24,17 +24,19 @@
 from math import *
 import datetime
 
-    
-#Computation of new coordinates
 
-def polar_coordinates (x, y, distance, angle): #angle in degrees
+def polar_coordinates (x, y, distance, angle):
+    '''
+        Calculate polar coordinates from xy, distance and angle (degrees)
+    '''
     xf = (distance * cos(radians(angle))) + x
     yf = (distance * sin(radians(angle))) + y
-    return [xf,yf]
+    return (xf,yf)
 
-##Lenght of latitude and longitude 
-
-def lenght_latitude_longitude(value): #value in degrees (0.0)
+def lenght_latitude_longitude(value):
+    '''
+        Lenght of latitude and longitude (degrees)
+    '''
     lat = radians(value)
     m1 = 111132.92
     m2 = -559.82
@@ -43,19 +45,18 @@ def lenght_latitude_longitude(value): #value in degrees (0.0)
     p1 = 111412.84
     p2 = -93.5
     p3 = 0.118
+    
     latlen = m1 + (m2 * cos(2 * lat)) + (m3 * cos(4 * lat)) +\
             (m4 * cos(6 * lat))
     longlen = (p1 * cos(lat)) + (p2 * cos(3 * lat)) +\
             (p3 * cos(5 * lat))
-    return [latlen,longlen]
 
-
-#Transformations
-
-##Transformations between quaternions and Euler's angles
+    return (latlen,longlen)
 
 def quat2euler(qw,qx,qy,qz):
-    
+    '''
+        Convert quaternions to Euler's angles
+    '''
     qw2 = qw * qw
     qx2 = qx * qx
     qy2 = qy * qy
@@ -76,7 +77,7 @@ def quat2euler(qw,qx,qy,qz):
         Y = -360/pi*atan2(qx,qw)
         Z = -90
         X = 0
-        return [X,Y,Z]
+        return (X,Y,Z)
 
     h     = atan2(2 * qy * qw - 2 * qx * qz, 1 - 2 * qy * qy - 2 * qz * qz)
     a     = asin (2 * qx * qy + 2 * qz * qw)
@@ -85,11 +86,13 @@ def quat2euler(qw,qx,qy,qz):
     Z = a * 180/pi
     X = b * 180/pi
 
-    return [X, Y, Z]
+    return (X, Y, Z)
 
 
 def euler2quat(X,Y,Z):
-    
+    '''
+        Convert Euler's angles to quaternions
+    '''
     h  = Y * pi/360
     a  = Z * pi/360
     b  = X * pi/360
@@ -103,28 +106,33 @@ def euler2quat(X,Y,Z):
     qx = ((s1 * s2 * c3 + c1 * c2 * s3)* 100000)/100000
     qy = ((s1 * c2 * c3 + c1 * s2 * s3)* 100000)/100000
     qz = ((c1 * s2 * c3 - s1 * c2 * s3)* 100000)/100000
-    return [qw, qx, qy, qz]
+    return (qw, qx, qy, qz)
 
-##rotation of coordinates 
-
-def rotation_coordinates(x, y, angle): #angle in degrees
+def rotation_coordinates(x, y, angle):
+    '''
+        Rotation of coordinates
+    '''
     xf = x * cos(radians(angle))+ y * sin(radians(angle))
     yf = -x * sin(radians(angle))+ y * cos(radians(angle));
-    return [xf,yf]
-  
-#Transformations between reference systems
+    return (xf,yf)  
 
-def geodetic2cartesian(lat,lon,h, a =6378137, b=6356752.314140347): #SIRGAS
-        '''Convert from LLH to ECEF
-        '''
+def geodetic2cartesian(lat,lon,h, a =6378137, b=6356752.314140347):
+    '''
+        Convert from LLH to ECEF
+    '''
     e2 = (pow(a,2) -pow(b,2))/pow(a,2)
     N = a/(pow(1. -e2 * pow(sin(radians(lat)),2), 0.5))
     X = (N+h) * cos(radians(lat)) * cos(radians(lon))
     Y = (N+h) * cos(radians(lat)) * sin(radians(lon))
     Z = ((1.-e2) * N + h) * sin(radians(lat))
-    return [X,Y,Z]
+    return (X,Y,Z)
  
-def cartesian2geodetic (X, Y, Z, a = 6378137,b = 6356752.314140347): #SIRGAS
+def cartesian2geodetic (X, Y, Z,
+                        a = 6378137,
+                        b = 6356752.314140347):
+    '''
+        Convert from ECEF to LLH
+    '''
     H = 0
     v = 0
     e2 = (pow(a,2) -pow(b,2))/pow(a,2)
@@ -138,11 +146,18 @@ def cartesian2geodetic (X, Y, Z, a = 6378137,b = 6356752.314140347): #SIRGAS
             lat1 = lat
             lat = atan2(Z + e2 * v * sin(lat),p)
     
-    lat = degrees(lat) #in degrees
-    lon = degrees(atan2(radians(Y), radians(X))) #in degrees
-    return [lat,lon,H]
+    lat = degrees(lat)
+    lon = degrees(atan2(radians(Y), radians(X)))
+    return (lat,lon,H)
 
-def geodetic2enu (lat, lon, h, a = 6378137, b = 6356752.314140347):
+def geodetic2enu (lat,
+                  lon,
+                  h,
+                  a = 6378137,
+                  b = 6356752.314140347):
+    '''
+        Convert from LLH to ENU
+    '''
     e2 = (pow(a,2) - pow(b,2))/pow(a,2)
     lat = radians(lat)
     v = a/pow((1- e2* pow(sin(lat),2)),0.5)
@@ -152,37 +167,62 @@ def geodetic2enu (lat, lon, h, a = 6378137, b = 6356752.314140347):
             E = radians(lon) * small_circle
     N = lat * a
     U = h
-    return [E, N, U]
+    return (E, N, U)
     
 
-def helmert_transformation (X,Y,Z,tx,ty,tz,s,rx,ry,rz,a= 6378137,b=6356752.314140347):
-
+def helmert_transformation (X,
+                            Y,
+                            Z,
+                            tx,
+                            ty,
+                            tz,
+                            s,
+                            rx,
+                            ry,
+                            rz,
+                            a = 6378137,
+                            b = 6356752.314140347):
+    '''
+        Helmert Transformation
+    '''
     xp = tx + ((1 + s) * X) - (rz * Y) + (ry * Z)
     yp = ty + (rz * X) + ((1 + s) * Y) - (rx * Z)
     zp = tz - (ry * X) + (rx * Y) + ((1 + s) * Z)
     
-    return [xp,yp,zp]
+    return (xp,yp,zp)
 
-def sad2sirgas(x,y,z): #SAD 69 to SIRGAS 2000
+def sad2sirgas(x,y,z):
+    '''
+        Convert from SAD69 to SIRGAS 2000
+    '''
     xf = x - 67.35
     yf = y + 3.88
     zf = z - 38.22
-    return [xf,yf,zf]
+    return (xf,yf,zf)
 
-def sirgas2sad(x,y,z): #SIRGAS 2000 to SAD69
+def sirgas2sad(x,y,z):
+    '''
+        Convert from SIRGAS200 to SAD69
+    '''
     xf = x + 67.35
     yf = y - 3.88
     zf = z + 38.22
-    return [xf,yf,zf]
+    return (xf,yf,zf)
 
-def corregoalegre2sirgas(x,y,z): #Córrego Alegre to SIRGAS 2000
+def corregoalegre2sirgas(x,y,z):
+    '''
+        Convert from Corrego Alegre to SIRGAS
+    '''
     xf = x - 206.048
     yf = y + 168.279
     zf = z - 3.283
-    return [xf,yf,zf]
+    return (xf,yf,zf)
 
-def sirgas2corregoalegre(x,y,z): #SIRGAS 2000 to Córrego Alegre
+def sirgas2corregoalegre(x,y,z):
+    '''
+        Convert from SIRGAS to Corrego Alegre
+    '''
     xf = x + 206.048
     yf = y - 168.279
     zf = z + 3.283
-    return [xf,yf,zf]
+    return (xf,yf,zf)

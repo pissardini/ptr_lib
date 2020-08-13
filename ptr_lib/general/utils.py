@@ -24,25 +24,38 @@
 import joblib
 import os
     
-def save2zip(data,
+def save     (data,
              filename,
              compress=3):
-    ''' Save data (matrices, list) to a zip file. 
+    """ Save data (matrices, list) to a zip file. 
 
         Keyword arguments:
 	        data -- input data
                 filename -- file to save data
                 compress -- int from 0 to 9 or bool or 2-tuple (default:3)
         Output:
-    '''
+    """
     joblib.dump(data, filename,compress=3)
     print ("Saved data")
 
-def load_from_zip(filename):
+def load (filename):
+    """ Load data (matrices, list) from a zip file. 
+
+        Keyword arguments:
+                filename -- file of saved data
+        Output:
+                data -- data in file
+    """
     print("Loading data")
     return joblib.load(filename)
 
 def mkdir(path):
+    """ Create a directory 
+
+        Keyword arguments:
+                path -- path of a directory
+        Output:
+    """
     try:
         os.mkdir(path)
     except OSError:
@@ -51,9 +64,15 @@ def mkdir(path):
         print (f"Successfully created the directory {path}.")
 
 def rmdir(path):
+    """ Remove a directory 
+
+        Keyword arguments:
+                path -- path of a directory
+        Output:
+    """
     try:
         os.rmdir(path)
-    except OSError as e:
+    except OSError:
         print (f"Deletion of the directory {path} failed.")
     else:
         print (f"Successfully deleted the directory {path}.")

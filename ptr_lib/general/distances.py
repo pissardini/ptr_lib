@@ -32,14 +32,14 @@ def cartesian_distance (lat1,
                         lon2,
                         earth_radius=RADIUS_EARTH):
     
-    ''' Cartesian distance between two coordinates
+    """ Cartesian distance between two coordinates
         Keyword arguments:
                 lat1, lon1   -- lat,lon of first position
                 lat2, lon2   -- lat,lon of second position
                 earth_radius -- Earth's radius (default:6378137.0)
         Output:        
 	        distance -- in meters
-    '''
+    """
     lat1 = radians(lat1)
     lat2 = radians(lat2)
     lon1 = radians(lon1)
@@ -51,14 +51,14 @@ def cartesian_xy(x1,
                  y1,
                  x2,
                  y2):
-    ''' Cartesian distance between two points
+    """ Cartesian distance between two points
 
         Keyword arguments:
 	        x1, y1     -- x,y of first position
                 x2, y2     -- x,y of second position
         Output:        
 	        distance -- in units
-    '''
+    """
     return sqrt(pow(x2-x,1)+ pow(y2-y1,2))
 
 def spherical_cosines(lat1,
@@ -67,7 +67,7 @@ def spherical_cosines(lat1,
                       lon2,
                       earth_radius=RADIUS_EARTH):
     
-    ''' Spherical Cosines - return distance between two points in meters
+    """ Spherical Cosines - return distance between two points in meters
 
         Keyword arguments:
 	        lat1, lon1   -- lat,lon of first position
@@ -76,7 +76,7 @@ def spherical_cosines(lat1,
         Output:        
 	        distance   -- distance in meters
 
-    '''
+    """
     lat1 = radians(lat1)
     lat2 = radians(lat2)
     lon1 = radians(lon1)
@@ -90,7 +90,7 @@ def haversine (lat1,
                lon2,
                earth_radius=RADIUS_EARTH):
     
-    ''' Harvesine - return distance between two points in meters
+    """ Harvesine - return distance between two points in meters
 
         Keyword arguments:
 	        lat1, lon1   -- lat,lon of first position
@@ -99,7 +99,7 @@ def haversine (lat1,
         Output:        
 	        distance   -- distance in meters
 
-    '''
+    """
 
     lat1 = radians(lat1)
     lat2 = radians(lat2)
@@ -120,7 +120,7 @@ def equirec_approximation (lat1,
                            lon2,
                            earth_radius=RADIUS_EARTH):
     
-    ''' Equirectangular approximation - return distance between two points in meters
+    """ Equirectangular approximation - return distance between two points in meters
         using Pythagorean theorem. In this case, accuracy is less important.
 
         Keyword arguments:
@@ -130,7 +130,7 @@ def equirec_approximation (lat1,
         Output:        
 	        distance   -- distance in meters
 
-    '''
+    """
     lat1 = radians(lat1)
     lat2 = radians(lat2)
     lon1 = radians(lon1)
