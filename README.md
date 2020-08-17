@@ -16,7 +16,7 @@ Authors:
 git clone https://github.com/pissardini/ptr_lib.git
 ```
 
-or download zip file and extract the content to /ptr_lib folder. 
+or [download zip file from GitHub](https://github.com/pissardini/ptr_lib/archive/master.zip) and extract the content to /ptr_lib folder. 
 
 * Enter in /ptr_lib folder:
 
