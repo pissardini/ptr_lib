@@ -23,12 +23,32 @@
 
 
 import matplotlib.pyplot as plt
+import math
+import numpy as np
+from random import random
 
-def skyplot_gnss (prn,e,az):
+def generate_colors(nr_colors = 10,
+                    cmap      = None):
+    """
+    Generate random number of colors
+    """
+    if cmap is None:
+        return [(random(),random(),random()) for i in range(255)]
+    else:
+        return plt.cm.get_cmap(cmap, nr_colors)
+
+def skyplot_gnss (prn,
+                  e,
+                  az,
+                  show_prn = True,
+                  bgcolor  = 'white',
+                  size=(10,10)):
     """
     Generate a skyplot from gnss data
     """
-    ax = plt.subplot(111, projection='polar')
+    fig = plt.figure()
+    ax  = fig.add_subplot(111, projection='polar')
+
     ax.set_theta_zero_location("N")
     ax.set_theta_direction(-1)
     ax.set_ylim(0,90)
@@ -37,6 +57,7 @@ def skyplot_gnss (prn,e,az):
 
     for sv, elev, azim in zip(prn, e, az):
         ax.plot(math.radians(azim), 90-elev,color='green', marker='o', markersize=20)
-        ax.text(math.radians(azim), 90-elev, sv, ha='center', va='center',color='white')
+        if show_prn is True:
+            ax.text(math.radians(azim), 90-elev, sv, ha='center', va='center',color='white')
 
     plt.show()

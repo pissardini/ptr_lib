@@ -63,39 +63,39 @@ def quat2euler(qw,qx,qy,qz):
     qz2 = qz * qz
     test= qx * qy + qz * qw
 
-    Y = 0.0
-    Z = 0.0
-    X = 0.0
+    y = 0.0
+    z = 0.0
+    x = 0.0
 
     if (test > 0.499):
-        Y = 360/pi * atan2(qx,qw)
-        Z = 90
-        X = 0
+        y = 360/pi * atan2(qx,qw)
+        z = 90
+        x = 0
         return [X,Y,Z]
 
     if (test < -0.499):
-        Y = -360/pi*atan2(qx,qw)
-        Z = -90
-        X = 0
+        y = -360/pi*atan2(qx,qw)
+        z = -90
+        x = 0
         return (X,Y,Z)
 
     h     = atan2(2 * qy * qw - 2 * qx * qz, 1 - 2 * qy * qy - 2 * qz * qz)
     a     = asin (2 * qx * qy + 2 * qz * qw)
     b     = atan2(2 * qx * qw - 2 * qy * qz, 1 - 2 * qx * qx - 2 * qz * qz)
-    Y = h * 180/pi
-    Z = a * 180/pi
-    X = b * 180/pi
+    y = h * 180/pi
+    z = a * 180/pi
+    x = b * 180/pi
 
-    return (X, Y, Z)
+    return (x, y, z)
 
 
-def euler2quat(X,Y,Z):
+def euler2quat(x,y,z):
     '''
         Convert Euler's angles to quaternions
     '''
-    h  = Y * pi/360
-    a  = Z * pi/360
-    b  = X * pi/360
+    h  = y * pi/360
+    a  = z * pi/360
+    b  = x * pi/360
     c1 = cos(h)
     c2 = cos(a)
     c3 = cos(b)
@@ -112,43 +112,49 @@ def rotation_coordinates(x, y, angle):
     '''
         Rotation of coordinates
     '''
-    xf = x * cos(radians(angle))+ y * sin(radians(angle))
-    yf = -x * sin(radians(angle))+ y * cos(radians(angle));
+    xf =  x * cos(radians(angle))+ y * sin(radians(angle))
+    yf = -x * sin(radians(angle))+ y * cos(radians(angle))
     return (xf,yf)  
 
-def geodetic2cartesian(lat,lon,h, a =6378137, b=6356752.314140347):
+def geodetic2cartesian(lat,
+                       lon,
+                       h,
+                       a = 6378137,
+                       b= 6356752.314140347):
     '''
         Convert from LLH to ECEF
     '''
     e2 = (pow(a,2) -pow(b,2))/pow(a,2)
-    N = a/(pow(1. -e2 * pow(sin(radians(lat)),2), 0.5))
-    X = (N+h) * cos(radians(lat)) * cos(radians(lon))
-    Y = (N+h) * cos(radians(lat)) * sin(radians(lon))
-    Z = ((1.-e2) * N + h) * sin(radians(lat))
-    return (X,Y,Z)
+    n  = a/(pow(1. -e2 * pow(sin(radians(lat)),2), 0.5))
+    x  = (n+h) * cos(radians(lat)) * cos(radians(lon))
+    y  = (n+h) * cos(radians(lat)) * sin(radians(lon))
+    z  = ((1.-e2) * n + h) * sin(radians(lat))
+    return (x,y,z)
  
-def cartesian2geodetic (X, Y, Z,
+def cartesian2geodetic (x,
+                        y,
+                        z,
                         a = 6378137,
                         b = 6356752.314140347):
     '''
         Convert from ECEF to LLH
     '''
-    H = 0
-    v = 0
-    e2 = (pow(a,2) -pow(b,2))/pow(a,2)
-    p = pow(pow(X,2)+pow(Y,2),0.5)
-    lat = atan2(Z, p*(1-e2))
+    h    = 0.0
+    v    = 0.0
+    e2   = (pow(a,2) -pow(b,2))/pow(a,2)
+    p    = pow(pow(x,2)+pow(y,2),0.5)
+    lat  = atan2(z, p*(1-e2))
     lat1 = 2 * pi
         
     while fabs(lat1-lat) > 1e-15:
             v = a/pow((1- e2* pow(sin(lat),2)),0.5)
-            H = p/cos(lat)- v
+            h = p/cos(lat)- v
             lat1 = lat
-            lat = atan2(Z + e2 * v * sin(lat),p)
+            lat = atan2(z + e2 * v * sin(lat),p)
     
     lat = degrees(lat)
-    lon = degrees(atan2(radians(Y), radians(X)))
-    return (lat,lon,H)
+    lon = degrees(atan2(radians(y), radians(x)))
+    return (lat,lon,h)
 
 def geodetic2enu (lat,
                   lon,
@@ -158,21 +164,23 @@ def geodetic2enu (lat,
     '''
         Convert from LLH to ENU
     '''
-    e2 = (pow(a,2) - pow(b,2))/pow(a,2)
-    lat = radians(lat)
-    v = a/pow((1- e2* pow(sin(lat),2)),0.5)
+    e2           = (pow(a,2) - pow(b,2))/pow(a,2)
+    lat          = radians(lat)
+    v            = a/pow((1- e2* pow(sin(lat),2)),0.5)
     small_circle = v * cos(lat)
+    
     if (lon < 0):
-            lon+=360
-            E = radians(lon) * small_circle
-    N = lat * a
-    U = h
-    return (E, N, U)
+            lon+= 360
+            e   = radians(lon) * small_circle
+
+    n = lat * a
+    u = h
+    return (e,n,u)
     
 
-def helmert_transformation (X,
-                            Y,
-                            Z,
+def helmert_transformation (x,
+                            y,
+                            z,
                             tx,
                             ty,
                             tz,
@@ -185,9 +193,9 @@ def helmert_transformation (X,
     '''
         Helmert Transformation
     '''
-    xp = tx + ((1 + s) * X) - (rz * Y) + (ry * Z)
-    yp = ty + (rz * X) + ((1 + s) * Y) - (rx * Z)
-    zp = tz - (ry * X) + (rx * Y) + ((1 + s) * Z)
+    xp = tx + ((1 + s) * x) - (rz * y) + (ry * z)
+    yp = ty + (rz * x) + ((1 + s) * y) - (rx * z)
+    zp = tz - (ry * x) + (rx * y) + ((1 + s) * z)
     
     return (xp,yp,zp)
 

@@ -34,10 +34,10 @@ class Ellipsoid:
         self.a   = a
         self.b   = b
         self.f   = f                             # flattening
-        self.e2  = e2                           # eccentricity squared
+        self.e2  = e2                            # eccentricity squared
         self.e   = pow(e2,0.5)                   # eccentricity
-        self.e12 = self.e2 / (1 - self.e2)     # 2nd eccentricity squared
-        self.e1  = pow(self.e12,0.5)            # 2nd eccentricity
+        self.e12 = self.e2 / (1 - self.e2)       # 2nd eccentricity squared
+        self.e1  = pow(self.e12,0.5)             # 2nd eccentricity
 
     @property
     def equatorial_radius(self):

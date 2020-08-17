@@ -59,7 +59,7 @@ def cartesian_xy(x1,
         Output:        
 	        distance -- in units
     """
-    return sqrt(pow(x2-x,1)+ pow(y2-y1,2))
+    return sqrt(pow(x2-x1,2)+ pow(y2-y1,2))
 
 def spherical_cosines(lat1,
                       lon1,
