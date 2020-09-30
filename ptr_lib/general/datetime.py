@@ -80,5 +80,11 @@ def gps_week(day,month,year):
     delta = date(year,month,day) - date(1980, 1, 6)
     return int(delta.days/7), delta.days % 7
 
+def gps_day(day,month,year):
+    """
+    Calculate GPS day from day, month, year
+    """
+    delta = date(year,month,day) - date(1980, 1, 6)
+    return int(delta.days) % 7
 
 

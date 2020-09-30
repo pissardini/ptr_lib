@@ -140,3 +140,36 @@ def equirec_approximation (lat1,
     y = lat2 - lat1
 
     return sqrt(x * x + y * y) * earth_radius
+
+
+def destination_point(coord,
+                      bearing,
+                      distance,
+                      earth_radius=RADIUS_EARTH):
+
+    """ Calculate a new coordinate from a initial coordinate, bearing and distance
+        Keyword arguments:
+	        coord        -- (lat,lon) of first position
+                bearing      -- bearing in radians
+                distance     -- distance in meters
+                earth_radius -- Earth's radius (default:6378137.0)
+        Output:        
+	        (lat,lon)    -- new coordinate (lat,lon) of first position
+
+    """
+    
+    d   = distance/earth_radius
+    
+    lat1 = radians(coord[0])
+    lon1 = radians(coord[1])
+    
+    lat = asin(sin(lat1) * cos(d) + cos(lat1) * sin(d) * cos(bearing))
+
+    lon = lon1 + atan2(sin(bearing)* sin(d) * cos(lat1),cos(d)- sin(lat1)* sin(lat))
+
+    lat= degrees(lat)
+    lon= degrees(lon)
+    
+    return (lat,lon)
+
+

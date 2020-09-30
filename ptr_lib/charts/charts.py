@@ -38,10 +38,12 @@ def generate_colors(nr_colors = 10,
         return plt.cm.get_cmap(cmap, nr_colors)
 
 def skyplot_gnss (prn,
-                  e,
-                  az,
+                  elev,
+                  azim,
                   show_prn = True,
+                  sat_color = 'green',
                   bgcolor  = 'white',
+                  sat_size = 20,
                   size=(10,10)):
     """
     Generate a skyplot from gnss data
@@ -55,9 +57,38 @@ def skyplot_gnss (prn,
     ax.set_yticks(np.arange(0,91,30))
     ax.set_yticklabels(ax.get_yticks()[::-1])
 
-    for sv, elev, azim in zip(prn, e, az):
-        ax.plot(math.radians(azim), 90-elev,color='green', marker='o', markersize=20)
+    for p, e, a in zip(prn, elev, azim):
+        ax.plot(math.radians(a), 90-e,color=sat_color, marker='o', markersize=sat_size)
         if show_prn is True:
-            ax.text(math.radians(azim), 90-elev, sv, ha='center', va='center',color='white')
+            ax.text(math.radians(a), 90-e, p, ha='center', va='center',color='white')
 
+    plt.show()
+
+
+def flatplot_gnss(prn,
+                  elev,
+                  azim,
+                  show_prn  = True,
+                  sat_color = 'green',
+                  bgcolor   = 'white',
+                  sat_size = 20,
+                  size=(10,10)):
+
+    """
+    Generate a flattened plot from gnss data
+    """
+    fig = plt.figure()
+    ax= fig.add_subplot(1,1,1)
+
+    ax.set_xlim([0,360])
+    ax.set_ylim([0,90])
+    ax.set_yticks(np.arange(0, 91, 30))
+    ax.set_xticks(np.arange(0, 361, 30))
+        
+    for p, e, a in zip(prn,elev,azim):
+        ax.plot(a, e, color=sat_color, marker='o', markersize=sat_size) 
+        if show_prn is True:
+            ax.text(a, e, p, ha='center', va='center',color='white')
+                  
+    plt.grid(True)
     plt.show()
