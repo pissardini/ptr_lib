@@ -60,3 +60,12 @@ def str2num (text):
         return number
     except:
         print("Error: The string can not be converted to a number")
+
+
+
+
+
+
+
+
+

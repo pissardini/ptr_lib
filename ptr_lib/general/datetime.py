@@ -22,6 +22,10 @@
 # THE SOFTWARE.
 
 import datetime
+import socket
+import struct
+import sys
+import time
 
 def day_of_year(year,month,day):
     """
@@ -87,4 +91,27 @@ def gps_day(day,month,year):
     delta = date(year,month,day) - date(1980, 1, 6)
     return int(delta.days) % 7
 
+
+
+def ntp(server='a.st1.ntp.br'):
+    """
+    Get current time from a ntp server
+    """
+    
+    REFERENCE_TIME = 2208988800
+    port           = 123
+    buffer         = 1024
+    data           = '\x1b' + 47 * '\0'
+
+    try:
+        client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        client.sendto(data.encode('utf-8'),(server, port))
+        msg, address = client.recvfrom(buffer)
+        if msg:
+            t = struct.unpack( '!12I',msg)[10]
+            t -= REFERENCE_TIME
+            return time.ctime(t).replace("  "," ")
+        return "Data not found"
+    except:
+        return "Error connecting to server"
 
