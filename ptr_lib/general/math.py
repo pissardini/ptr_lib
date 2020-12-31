@@ -61,11 +61,33 @@ def str2num (text):
     except:
         print("Error: The string can not be converted to a number")
 
+def avg(ls):
+    """ Calculate average between numbers of a list 
+    """
+    return sum(ls)/float(len(ls))
+
+def pvariance(ls):
+    """
+    Populational variance
+    """
+    avg = sum(ls) / len(ls)
+    return sum([(xi - avg) ** 2 for xi in ls]) / len(ls)
 
 
-
-
-
-
-
-
+def stdev(ls, population=False): #False: Excel mode
+    """
+    Standard-deviation
+        population: False: Excel standard.
+    """
+    num_items = len(ls)  
+    mean = sum(ls) / len(ls)
+    differences = [x - mean for x in ls]
+    sq_differences = [d ** 2 for d in differences]
+    ssd = sum(sq_differences)
+    
+    if population is True: #population
+        variance = ssd / num_items
+    else: #sample
+        variance = ssd / (num_items - 1)
+    sd = sqrt(variance)
+    return sd
