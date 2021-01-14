@@ -68,6 +68,8 @@ def pretty_cat(value):
 
 def classifier(data, mclass='cno'):
     """
+    A classifier for outdoor/indoor detection based on GPS data. This code is based on: 
+
     @article{pissardini2018,
       title={Detecção automática de cenários internos e externos utilizando mensagens NMEA de receptores GNSS},
       author={Pissardini, R.S. and Fonseca Junior, E.S.},
