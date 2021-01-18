@@ -31,7 +31,7 @@ def cartesian_distance (a,b,
     
     """ Cartesian distance between two coordinates
         Keyword arguments:
-	        a  -- (lat1, lon1)   lat,lon of first position
+	    a  -- (lat1, lon1)   lat,lon of first position
             b  -- (lat2, lon2)   lat,lon of second position
             earth_radius -- Earth's radius (default:6378137.0)
         Output:        
@@ -49,7 +49,7 @@ def cartesian_xy(a,
     """ Cartesian distance between two points
 
         Keyword arguments:
-	        a           -- (x,y) of first position
+	    a           -- (x,y) of first position
             b           -- (x,y) of second position
         Output:        
 	        distance -- in units
@@ -62,7 +62,7 @@ def spherical_cosines(a,b,
     """ Spherical Cosines - return distance between two points in meters
 
         Keyword arguments:
-	        a  -- (lat1, lon1)   lat,lon of first position
+	    a  -- (lat1, lon1)   lat,lon of first position
             b  -- (lat2, lon2)   lat,lon of second position
             earth_radius -- Earth's radius (default:6378137.0)
         Output:        
@@ -82,7 +82,7 @@ def haversine (a,b,
     """ Harvesine - return distance between two points in meters
 
         Keyword arguments:
-	        a  -- (lat1, lon1)   lat,lon of first position
+	    a  -- (lat1, lon1)   lat,lon of first position
             b  -- (lat2, lon2)   lat,lon of second position
             earth_radius -- Earth's radius (default:6378137.0)
         Output:        
@@ -110,7 +110,7 @@ def equirec_approximation (a,b,
         using Pythagorean theorem. In this case, accuracy is less important.
 
         Keyword arguments:
-	        a  -- (lat1, lon1)   lat,lon of first position
+	    a  -- (lat1, lon1)   lat,lon of first position
             b  -- (lat2, lon2)   lat,lon of second position
             earth_radius -- Earth's radius (default:6378137.0)
         Output:        
@@ -135,7 +135,7 @@ def destination_point(coordinate,
 
     """ Calculate a new coordinate from a initial coordinate, bearing and distance
         Keyword arguments:
-	            coordinate   -- (lat,lon) of first position
+	        coordinate   -- (lat,lon) of first position
                 bearing      -- bearing in radians
                 distance     -- distance in meters
                 earth_radius -- Earth's radius (default:6378137.0)

@@ -27,7 +27,7 @@ def angle_xy (a,
               b):
     """return angle between two points.
         Keyword arguments:
-	        a  -- (x,y)   x,y of first position
+	    a  -- (x,y)   x,y of first position
             b  -- (x,y)   x,y of second position
         Output:        
 	        angle -- in radians
@@ -44,7 +44,7 @@ def bearing (a,b):
     """return bearing between two points in radians. This formula is
        for the initial bearing.
         Keyword arguments:
-	        a  -- (lat1, lon1)   lat,lon of first position
+	    a  -- (lat1, lon1)   lat,lon of first position
             b  -- (lat2, lon2)   lat,lon of second position
         Output:        
 	        bearing - in radians
@@ -135,12 +135,10 @@ def gradians2degrees(value):
     """
     return value * 180/200
 
-
 def radians2gradians(value):
     """Convert radians to gradians.
     """
     return value * 200/pi
-
 
 def gradians2radians(value):
     """Convert gradians to radians.
