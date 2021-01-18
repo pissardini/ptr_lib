@@ -1,7 +1,7 @@
 # -*- coding: cp1252 -*-
 
 #
-# Copyright (c) 2014-2020 R.Pissardini <rodrigo AT pissardini DOT com>
+# Copyright (c) 2012-2021 R.Pissardini <rodrigo AT pissardini DOT com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,28 +21,38 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from math import *
+from math import acos, asin, atan2, cos, degrees, pi, radians, sin, sqrt
 
-def angle_xy (xi,
-              yi,
-              xf,
-              yf):
+def angle_xy (a,
+              b):
     """return angle between two points.
+        Keyword arguments:
+	        a  -- (x,y)   x,y of first position
+            b  -- (x,y)   x,y of second position
+        Output:        
+	        angle -- in radians
     """
+    xi = a[0]
+    yi = a[1]
+    xf = b[0]
+    yf = b[1]
+
     angle = atan2(yf - yi, xf - xi)
     return angle
 
-def bearing (lat1,
-             lon1,
-             lat2,
-             lon2):
+def bearing (a,b):
     """return bearing between two points in radians. This formula is
        for the initial bearing.
+        Keyword arguments:
+	        a  -- (lat1, lon1)   lat,lon of first position
+            b  -- (lat2, lon2)   lat,lon of second position
+        Output:        
+	        bearing - in radians
         """
-    lat1 = radians(lat1)
-    lon1 = radians(lon1)
-    lat2 = radians(lat2)
-    lon2 = radians(lon2)
+    lat1 = radians(a[0])
+    lon1 = radians(a[1])
+    lat2 = radians(b[0])
+    lon2 = radians(b[1])
 
     y = sin(lon2-lon1) * cos(lat2)
     x = cos(lat1) * sin(lat2) -\

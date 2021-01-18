@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 #
-# Copyright (c) 2012-2020 R.Pissardini <rodrigo AT pissardini DOT com>
+# Copyright (c) 2012-2021 R.Pissardini <rodrigo AT pissardini DOT com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ G_STD        = 9.80665             # Standard gravitational acceleration (m/s^2)
 GAS_CONST    = 8.3145              # J/mol K
 PLANCK       = 6.62607004e-34      # Planck's constant (m^2 kg/s)
 EL_MASS      = 9.10938356e-31      # Electron mass (in kg)
-EL_CHARGE    = 1.602176634e−19     # Electron charge (in coloumbs)
+EL_CHARGE    = 1.602176634e-19     # Electron charge (in coloumbs)
 GPS_PI       = 3.1415926535898     # Definition of PI in GPS
 RADIUS_EARTH = 6378137.0           # in meters
 SPEED_LIGHT  = 299792458.0         # (m/s)

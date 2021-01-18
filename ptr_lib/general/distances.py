@@ -1,7 +1,7 @@
 # -*- coding: cp1252 -*-
 
 #
-# Copyright (c) 2012-2020 R.Pissardini <rodrigo AT pissardini DOT com>
+# Copyright (c) 2012-2021 R.Pissardini <rodrigo AT pissardini DOT com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,90 +21,79 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from math import *
+from math import acos, asin, atan2, cos, degrees, radians, sin, sqrt
 from ptr_lib.general.constants import RADIUS_EARTH
 import datetime
 
 
-def cartesian_distance (lat1,
-                        lon1,
-                        lat2,
-                        lon2,
+def cartesian_distance (a,b,
                         earth_radius=RADIUS_EARTH):
     
     """ Cartesian distance between two coordinates
         Keyword arguments:
-                lat1, lon1   -- lat,lon of first position
-                lat2, lon2   -- lat,lon of second position
-                earth_radius -- Earth's radius (default:6378137.0)
+	        a  -- (lat1, lon1)   lat,lon of first position
+            b  -- (lat2, lon2)   lat,lon of second position
+            earth_radius -- Earth's radius (default:6378137.0)
         Output:        
 	        distance -- in meters
     """
-    lat1 = radians(lat1)
-    lat2 = radians(lat2)
-    lon1 = radians(lon1)
-    lon2 = radians(lon2)
-    
+    lat1 = radians(a[0])
+    lon1 = radians(a[1])
+    lat2 = radians(b[0])
+    lon2 = radians(b[1])
+
     return sqrt(pow(lat2-lat1,2)+ pow(lon2-lon1,2))* earth_radius
 
-def cartesian_xy(x1,
-                 y1,
-                 x2,
-                 y2):
+def cartesian_xy(a,
+                 b):
     """ Cartesian distance between two points
 
         Keyword arguments:
-	        x1, y1     -- x,y of first position
-                x2, y2     -- x,y of second position
+	        a           -- (x,y) of first position
+            b           -- (x,y) of second position
         Output:        
 	        distance -- in units
     """
-    return sqrt(pow(x2-x1,2)+ pow(y2-y1,2))
+    return sqrt(pow(b[0]-a[0],2)+ pow(b[1]-a[1],2))
 
-def spherical_cosines(lat1,
-                      lon1,
-                      lat2,
-                      lon2,
+def spherical_cosines(a,b,
                       earth_radius=RADIUS_EARTH):
     
     """ Spherical Cosines - return distance between two points in meters
 
         Keyword arguments:
-	        lat1, lon1   -- lat,lon of first position
-                lat2, lon2   -- lat,lon of second position
-                earth_radius -- Earth's radius (default:6378137.0)
+	        a  -- (lat1, lon1)   lat,lon of first position
+            b  -- (lat2, lon2)   lat,lon of second position
+            earth_radius -- Earth's radius (default:6378137.0)
         Output:        
 	        distance   -- distance in meters
 
     """
-    lat1 = radians(lat1)
-    lat2 = radians(lat2)
-    lon1 = radians(lon1)
-    lon2 = radians(lon2)
-    
+    lat1 = radians(a[0])
+    lon1 = radians(a[1])
+    lat2 = radians(b[0])
+    lon2 = radians(b[1])
+
     return acos(sin(lat1)* sin(lat2) + cos(lat1)* cos(lat2) * cos(lon2 - lon1)) * earth_radius
 
-def haversine (lat1,
-               lon1,
-               lat2,
-               lon2,
+def haversine (a,b,
                earth_radius=RADIUS_EARTH):
     
     """ Harvesine - return distance between two points in meters
 
         Keyword arguments:
-	        lat1, lon1   -- lat,lon of first position
-                lat2, lon2   -- lat,lon of second position
-                earth_radius -- Earth's radius (default:6378137.0)
+	        a  -- (lat1, lon1)   lat,lon of first position
+            b  -- (lat2, lon2)   lat,lon of second position
+            earth_radius -- Earth's radius (default:6378137.0)
         Output:        
 	        distance   -- distance in meters
 
     """
 
-    lat1 = radians(lat1)
-    lat2 = radians(lat2)
-    lon1 = radians(lon1)
-    lon2 = radians(lon2)
+    lat1 = radians(a[0])
+    lon1 = radians(a[1])
+    lat2 = radians(b[0])
+    lon2 = radians(b[1])
     
     delta_lat = lat2 - lat1
     delta_lon = lon2 - lon1
@@ -114,27 +103,24 @@ def haversine (lat1,
                   
     return earth_radius * c
 
-def equirec_approximation (lat1,
-                           lon1,
-                           lat2,
-                           lon2,
+def equirec_approximation (a,b,
                            earth_radius=RADIUS_EARTH):
     
     """ Equirectangular approximation - return distance between two points in meters
         using Pythagorean theorem. In this case, accuracy is less important.
 
         Keyword arguments:
-	        lat1, lon1   -- lat,lon of first position
-                lat2, lon2   -- lat,lon of second position
-                earth_radius -- Earth's radius (default:6378137.0)
+	        a  -- (lat1, lon1)   lat,lon of first position
+            b  -- (lat2, lon2)   lat,lon of second position
+            earth_radius -- Earth's radius (default:6378137.0)
         Output:        
 	        distance   -- distance in meters
 
     """
-    lat1 = radians(lat1)
-    lat2 = radians(lat2)
-    lon1 = radians(lon1)
-    lon2 = radians(lon2)
+    lat1 = radians(a[0])
+    lon1 = radians(a[1])
+    lat2 = radians(b[0])
+    lon2 = radians(b[1])
     
     x = (lon2 - lon1) * cos((lat1 + lat2)/2)
     y = lat2 - lat1
@@ -142,14 +128,14 @@ def equirec_approximation (lat1,
     return sqrt(x * x + y * y) * earth_radius
 
 
-def destination_point(coord,
+def destination_point(coordinate,
                       bearing,
                       distance,
                       earth_radius=RADIUS_EARTH):
 
     """ Calculate a new coordinate from a initial coordinate, bearing and distance
         Keyword arguments:
-	        coord        -- (lat,lon) of first position
+	            coordinate   -- (lat,lon) of first position
                 bearing      -- bearing in radians
                 distance     -- distance in meters
                 earth_radius -- Earth's radius (default:6378137.0)
@@ -160,8 +146,8 @@ def destination_point(coord,
     
     d   = distance/earth_radius
     
-    lat1 = radians(coord[0])
-    lon1 = radians(coord[1])
+    lat1 = radians(coordinate[0])
+    lon1 = radians(coordinate[1])
     
     lat = asin(sin(lat1) * cos(d) + cos(lat1) * sin(d) * cos(bearing))
 
@@ -172,4 +158,28 @@ def destination_point(coord,
     
     return (lat,lon)
 
+def midpoint(a,b):
 
+    """
+    Calculate the half-way point along a great circle path between two coordinates.
+        Keyword arguments:
+	        a        -- (lat,lon) of first position
+	        b        -- (lat,lon) of second position
+        Output:        
+	        (lat,lon)    -- midpoint (lat,lon)
+
+    """
+    lat1 = radians(a[0])
+    lon1 = radians(a[1])
+    lat2 = radians(b[0])
+    lon2 = radians(b[1])
+
+    bx = cos(lat2) * cos(lon2-lon1)
+    by = cos(lat2) * sin(lon2-lon1)
+
+    lat = atan2(sin(lat1)+sin(lat2),\
+                  sqrt(((cos(lat1)+ bx)**2)+ by**2))
+    lon = lon1 + atan2(by, cos(lat1)+ bx)
+    lat= degrees(lat)
+    lon= degrees(lon)
+    return (lat, lon)
