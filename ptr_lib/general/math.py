@@ -21,10 +21,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from math import *
+from math import modf,sqrt
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
-
-def get_intpart (number):
+def get_intpart (number:float)->float:
     """ Get the integer part of a float number. 
 
         Keyword arguments:
@@ -36,7 +36,7 @@ def get_intpart (number):
     return ipart[1]
 
 
-def get_fracpart (number):
+def get_fracpart (number:float)->float:
     """ Get the fractional part of a float number. 
 
         Keyword arguments:
@@ -47,7 +47,7 @@ def get_fracpart (number):
     fpart = modf(number)
     return fpart[0]
 
-def str2num (text):
+def str2num (text:str)->float:
     """ Convert string to number. 
 
         Keyword arguments:
@@ -55,18 +55,16 @@ def str2num (text):
         Output:
                 number  -- number converted
     """
-    try:
-        number = float(text)
-        return number
-    except:
-        print("Error: The string can not be converted to a number")
+    assert text.isnumeric(),"Error: The string can not be converted to a number"
+    number = float(text)
+    return number
 
-def avg(ls):
+def avg(ls:List[float])->float:
     """ Calculate average between numbers of a list 
     """
     return sum(ls)/float(len(ls))
 
-def pvariance(ls):
+def pvariance(ls:List[float])->float:
     """
     Populational variance
     """
@@ -74,7 +72,8 @@ def pvariance(ls):
     return sum([(xi - avg) ** 2 for xi in ls]) / len(ls)
 
 
-def stdev(ls, population=False): #False: Excel mode
+def stdev(ls:List[float], 
+          population:bool=False)->float: #False: Excel mode
     """
     Standard-deviation
         population: False: Excel standard.

@@ -24,14 +24,16 @@
 from math import acos, asin, atan2, cos, degrees, radians, sin, sqrt
 from ptr_lib.general.constants import RADIUS_EARTH
 import datetime
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
 
-def cartesian_distance (a,b,
-                        earth_radius=RADIUS_EARTH):
+def cartesian_distance (a:Tuple[float,float],
+                        b:Tuple[float,float],
+                        earth_radius:float=RADIUS_EARTH)->float:
     
     """ Cartesian distance between two coordinates
         Keyword arguments:
-	    a  -- (lat1, lon1)   lat,lon of first position
+	        a  -- (lat1, lon1)   lat,lon of first position
             b  -- (lat2, lon2)   lat,lon of second position
             earth_radius -- Earth's radius (default:6378137.0)
         Output:        
@@ -42,27 +44,28 @@ def cartesian_distance (a,b,
     lat2 = radians(b[0])
     lon2 = radians(b[1])
 
-    return sqrt(pow(lat2-lat1,2)+ pow(lon2-lon1,2))* earth_radius
+    return sqrt((lat2-lat1)**2 + (lon2-lon1)**2)* earth_radius
 
-def cartesian_xy(a,
-                 b):
+def cartesian_xy(a:Tuple[float,float],
+                 b:Tuple[float,float])->float:
     """ Cartesian distance between two points
 
         Keyword arguments:
-	    a           -- (x,y) of first position
+	        a           -- (x,y) of first position
             b           -- (x,y) of second position
         Output:        
 	        distance -- in units
     """
-    return sqrt(pow(b[0]-a[0],2)+ pow(b[1]-a[1],2))
+    return sqrt((b[0]-a[0])**2 + (b[1]-a[1])**2)
 
-def spherical_cosines(a,b,
+def spherical_cosines(a:Tuple[float,float],
+                      b:Tuple[float,float],
                       earth_radius=RADIUS_EARTH):
     
     """ Spherical Cosines - return distance between two points in meters
 
         Keyword arguments:
-	    a  -- (lat1, lon1)   lat,lon of first position
+	        a  -- (lat1, lon1)   lat,lon of first position
             b  -- (lat2, lon2)   lat,lon of second position
             earth_radius -- Earth's radius (default:6378137.0)
         Output:        
@@ -76,13 +79,14 @@ def spherical_cosines(a,b,
 
     return acos(sin(lat1)* sin(lat2) + cos(lat1)* cos(lat2) * cos(lon2 - lon1)) * earth_radius
 
-def haversine (a,b,
-               earth_radius=RADIUS_EARTH):
+def haversine (a:Tuple[float,float],
+               b:Tuple[float,float],
+               earth_radius:float=RADIUS_EARTH)->float:
     
     """ Harvesine - return distance between two points in meters
 
         Keyword arguments:
-	    a  -- (lat1, lon1)   lat,lon of first position
+	        a  -- (lat1, lon1)   lat,lon of first position
             b  -- (lat2, lon2)   lat,lon of second position
             earth_radius -- Earth's radius (default:6378137.0)
         Output:        
@@ -98,19 +102,20 @@ def haversine (a,b,
     delta_lat = lat2 - lat1
     delta_lon = lon2 - lon1
     
-    a = pow(sin(delta_lat/2),2) + cos(lat1) * cos(lat2) * pow(sin(delta_lon/2),2)
+    a = (sin(delta_lat/2))**2 + cos(lat1) * cos(lat2) * (sin(delta_lon/2))**2
     c = 2 * atan2(sqrt(a), sqrt(1-a))
                   
     return earth_radius * c
 
-def equirec_approximation (a,b,
-                           earth_radius=RADIUS_EARTH):
+def equirec_approximation ( a:Tuple[float,float],
+                            b:Tuple[float,float],
+                            earth_radius:float=RADIUS_EARTH)->float:
     
     """ Equirectangular approximation - return distance between two points in meters
         using Pythagorean theorem. In this case, accuracy is less important.
 
         Keyword arguments:
-	    a  -- (lat1, lon1)   lat,lon of first position
+	        a  -- (lat1, lon1)   lat,lon of first position
             b  -- (lat2, lon2)   lat,lon of second position
             earth_radius -- Earth's radius (default:6378137.0)
         Output:        
@@ -125,17 +130,16 @@ def equirec_approximation (a,b,
     x = (lon2 - lon1) * cos((lat1 + lat2)/2)
     y = lat2 - lat1
 
-    return sqrt(x * x + y * y) * earth_radius
+    return sqrt(x**2 + y**2) * earth_radius
 
-
-def destination_point(coordinate,
-                      bearing,
-                      distance,
-                      earth_radius=RADIUS_EARTH):
+def destination_point(coordinate:Tuple[float,float],
+                      bearing:float,
+                      distance:float,
+                      earth_radius:float=RADIUS_EARTH)->Tuple[float,float]:
 
     """ Calculate a new coordinate from a initial coordinate, bearing and distance
         Keyword arguments:
-	        coordinate   -- (lat,lon) of first position
+	            coordinate   -- (lat,lon) of first position
                 bearing      -- bearing in radians
                 distance     -- distance in meters
                 earth_radius -- Earth's radius (default:6378137.0)
@@ -158,7 +162,8 @@ def destination_point(coordinate,
     
     return (lat,lon)
 
-def midpoint(a,b):
+def midpoint(a:Tuple[float,float],
+             b:Tuple[float,float])->Tuple[float,float]:
 
     """
     Calculate the half-way point along a great circle path between two coordinates.

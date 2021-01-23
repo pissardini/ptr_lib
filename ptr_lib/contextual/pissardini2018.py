@@ -21,13 +21,14 @@
 # THE SOFTWARE.
 
 from collections import Counter 
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
 OUTDOOR_OPEN              = 3
 OUTDOOR_BLOCKAGES         = 2
 INDOOR_OPENINGS           = 1
 INDOOR_WITHOUT_OPENINGS   = 0 
 
-def sum_cno(value = 0): 
+def sum_cno(value:float = 0)-> List[int]: 
   if value>=350:
       return [3]
   elif value>=200 and value<350:
@@ -36,25 +37,25 @@ def sum_cno(value = 0):
       return [1]
   return [0]
 
-def avg_cno(value = 0): 
+def avg_cno(value:float = 0)->List[int]: 
   if value>=30:
       return [3]
   elif value >=20 and value<30:
       return [2,1]
   return [0]
 
-def sat(value = 0): 
+def sat(value:int = 0)->List[int]: 
   if value>3:
     return [1,2,3]
   return [0]
 
-def dop(value = 0): 
+def dop(value:float = 0)->List[int]: 
   if value > 7: 
     return [0,1]
   else:
     return [2,3]
 
-def pretty_cat(value):
+def pretty_cat(value:int)->List[int]:
   if value == 0:
     return [0,"Indoor without openings"]
   elif value == 1:
@@ -62,11 +63,12 @@ def pretty_cat(value):
   elif value == 2:
     return [2,"Outdoor near blockages"]
   elif value == 3:
-    return [2,"Open outdoor"]
+    return [3,"Open outdoor"]
   else:
     print("Value not found")
 
-def classifier(data, mclass='cno'):
+def classifier(data:Dict, 
+               mclass:str='sum_cno')->Dict:
     """
     A classifier for outdoor/indoor detection based on GPS data. This code is based on: 
 
@@ -91,7 +93,7 @@ def classifier(data, mclass='cno'):
     Output:
         scenario: a list with scenario features.
     """
-    if mclass =='cno':
+    if mclass =='sum_cno':
       return pretty_cat(sum_cno(sum(data['cno']))[0])
     elif mclass =='complete':
       results = []

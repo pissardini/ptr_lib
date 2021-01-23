@@ -21,17 +21,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import datetime
+from datetime import date, datetime
 import socket
 import struct
 import sys
 import time
+from ptr_lib.general.math import get_intpart
 
 def day_of_year(year,month,day):
     """
     Calculate day of year from a date
     """
-    doy = datetime.datetime(year, month, day).timetuple().tm_yday
+    doy = datetime(year, month, day).timetuple().tm_yday
     return doy
 
 def julian_date(year,month,day,hour,minute,second):
@@ -90,8 +91,6 @@ def gps_day(day,month,year):
     """
     delta = date(year,month,day) - date(1980, 1, 6)
     return int(delta.days) % 7
-
-
 
 def ntp(server='a.st1.ntp.br'):
     """

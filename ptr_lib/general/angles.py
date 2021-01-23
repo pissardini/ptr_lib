@@ -21,13 +21,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 from math import acos, asin, atan2, cos, degrees, pi, radians, sin, sqrt
 
-def angle_xy (a,
-              b):
+def angle_xy (a:Tuple[float,float],
+              b:Tuple[float,float])->float:
     """return angle between two points.
         Keyword arguments:
-	    a  -- (x,y)   x,y of first position
+            a  -- (x,y)   x,y of first position
             b  -- (x,y)   x,y of second position
         Output:        
 	        angle -- in radians
@@ -40,11 +41,12 @@ def angle_xy (a,
     angle = atan2(yf - yi, xf - xi)
     return angle
 
-def bearing (a,b):
+def bearing (a:Tuple[float,float],
+             b:Tuple[float,float])-> float:
     """return bearing between two points in radians. This formula is
        for the initial bearing.
         Keyword arguments:
-	    a  -- (lat1, lon1)   lat,lon of first position
+	        a  -- (lat1, lon1)   lat,lon of first position
             b  -- (lat2, lon2)   lat,lon of second position
         Output:        
 	        bearing - in radians
@@ -63,28 +65,33 @@ def bearing (a,b):
     return b
 
 
-def bearing2azimuth(value):
+def bearing2azimuth(value:float)->float:
     """convert bearing value to azimuth .
     """
     if value <0:
         value = (180 + value) + 180
     return value
 
-def arcsecs2radians (seconds):
+def arcsecs2radians (seconds:float) ->float:
     """convert arcseconds to radians.
     """
     radians = seconds * 0.000004848
     return radians
 
-def radians2arcsecs (radians):
+def radians2arcsecs (value:float)->float:
     """convert radians to arcseconds.
     """
-    seconds = radians * 206264.806247096
+    seconds = value * 206264.806247096
     return seconds
 
-def dms2decimal (degrees, minutes, seconds, direction='S'):
+def dms2decimal (coordinate:Tuple[float,float,float],
+                 direction:str)-> float:
     """Convert degree-minute-second to degree in decimal format.
-    """    
+    """   
+    degrees_ = coordinate[0]
+    minutes  = coordinate[1]
+    seconds  = coordinate[2]
+
     if direction in ['S','W']:
         signal = -1
     elif direction in ['N','E']:
@@ -93,13 +100,15 @@ def dms2decimal (degrees, minutes, seconds, direction='S'):
         print('[Error] Insert a correct direction [ N, S, W or E]\n')
         return
     
-    decimal = signal * (int(degrees) + float(minutes) / 60 + float(seconds) / 3600)
+    decimal = signal * (int(degrees_) + float(minutes) / 60 + float(seconds) / 3600)
     
     return decimal
     
-def decimal2dms (decimal, direction = 'N'):
+def decimal2dms (decimal:float, 
+                 direction:str = 'N')->Tuple[float,float,float,str]:
     """Convert degree in decimal formar to degree in degree-minute-second format.
     """
+    assert direction in ['N','E'],'Insert a correct direction [N or E]\n'
     degrees = int(decimal)
     minutes = int (abs((decimal - int(decimal)) * 60))
     seconds = abs((abs((decimal - int(decimal)) * 60)-minutes)*60)
@@ -110,37 +119,35 @@ def decimal2dms (decimal, direction = 'N'):
     elif direction =='E':
         if decimal <0:
             direction ='W'
-    else:
-        print('[Error] Insert a correct direction [N or E]\n')
-        return
     return (degrees,minutes,seconds,direction)
 
-def degrees2radians(value):
+
+def degrees2radians(value:float)->float:
     """Convert degrees to radians.
     """
     return radians(value)
 
-def radians2degrees(value):
+def radians2degrees(value:float)->float:
     """Convert radians to degrees.
     """
     return degrees(value)
 
-def degrees2gradians(value):
+def degrees2gradians(value:float)->float:
     """Convert degrees to gradians.
     """
     return value * 200/180
 
-def gradians2degrees(value):
+def gradians2degrees(value:float)->float:
     """Convert gradians to degree.
     """
     return value * 180/200
 
-def radians2gradians(value):
+def radians2gradians(value:float)->float:
     """Convert radians to gradians.
     """
     return value * 200/pi
 
-def gradians2radians(value):
+def gradians2radians(value:float)->float:
     """Convert gradians to radians.
     """
     return value * pi/200

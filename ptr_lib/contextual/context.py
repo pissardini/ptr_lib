@@ -21,18 +21,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import pissardini2018
+from pissardini2018 import classifier
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
-def context            (data,
-                       model  ='pissardini2018',
-                       mclass = 'cno'):
+def context           (data:Dict,
+                       model:str  ='pissardini2018',
+                       mclass:str = 'sum_cno')->List:
 
     """
     Input:
         data: a dictionary with following format:
-            {cno  :[cno_sat1,cno_sat2,...],
-             sat  :[prn1,prn2,...],
-             pdop :value}
+            {'cno'  :[cno_sat1,cno_sat2,...],
+             'sat'  :[prn1,prn2,...],
+             'pdop' :value}
         model: model of scenario detection
             pissardini2018: Detecção automática de cenários internos e externos utilizando mensagens NMEA de receptores GNSS
             mclass: 
@@ -42,5 +43,5 @@ def context            (data,
         scenario: a list with scenario features.
     """
     if model =='pissardini2018':
-        return pissardini2018.classifier(data, mclass)
+        return classifier(data, mclass)
     print("Model not found")

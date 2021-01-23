@@ -24,7 +24,8 @@
 # 22/01/2021  - insert llh2utm and utm2llh
 
 
-from math import asin, asinh, atanh, atan, atan2, cos, cosh, degrees, fabs, floor, pi, radians, sin, sinh, sqrt, tan,tanh
+from math import asin, asinh, atanh, atan, atan2, cos, cosh, degrees, fabs,\
+    floor, pi, radians, sin, sinh, sqrt, tan,tanh
 from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
 def polar_coordinates (coordinate:Tuple[float], 
@@ -134,8 +135,8 @@ def geodetic2cartesian(coordinate:Tuple[float],
     lat = coordinate[0]
     lon = coordinate[1]
     h   = coordinate[2]
-    e2 = (pow(a,2) -pow(b,2))/pow(a,2)
-    n  = a/(pow(1. -e2 * pow(sin(radians(lat)),2), 0.5))
+    e2 = (a**2 - b**2)/a**2
+    n  = a/sqrt(1. -e2 * sin(radians(lat))**2)
     x  = (n+h) * cos(radians(lat)) * cos(radians(lon))
     y  = (n+h) * cos(radians(lat)) * sin(radians(lon))
     z  = ((1.-e2) * n + h) * sin(radians(lat))
@@ -153,14 +154,14 @@ def cartesian2geodetic (coordinate:Tuple[float],
 
     h    = 0.0
     v    = 0.0
-    e2   = (pow(a,2) -pow(b,2))/pow(a,2)
-    p    = pow(pow(x,2)+pow(y,2),0.5)
+    e2   = (a**2 - b**2)/a**2
+    p    = sqrt(x**2 + y**2)
     lat  = atan2(z, p*(1-e2))
     lat1 = 2 * pi
         
     while fabs(lat1-lat) > 1e-15:
-            v = a/pow((1- e2* pow(sin(lat),2)),0.5)
-            h = p/cos(lat)- v
+            v   = a/sqrt(1- e2* sin(lat)**2)
+            h   = p/cos(lat)- v
             lat1 = lat
             lat = atan2(z + e2 * v * sin(lat),p)
     
@@ -178,9 +179,9 @@ def geodetic2enu (coordinate:Tuple[float],
     lon = coordinate[1]
     h   = coordinate[2]
 
-    e2           = (pow(a,2) - pow(b,2))/pow(a,2)
+    e2           = (a**2 - b**2)/ a**2
     lat          = radians(lat)
-    v            = a/pow((1- e2* pow(sin(lat),2)),0.5)
+    v            = a/sqrt(1- e2* sin(lat)**2)
     small_circle = v * cos(lat)
     
     if (lon < 0):
@@ -271,6 +272,7 @@ def llh2utm(coordinates:Tuple[float],
     '''
         Convert from lat, lon, h to utm
         Based on https://www.movable-type.co.uk/scripts/latlong-utm-mgrs.html
+        Reference: Karney 2011 ‘Transverse Mercator with an accuracy of a few nanometers’
         
         Keyword arguments:
             coordinates  -- (lat, lon, h)
@@ -279,8 +281,9 @@ def llh2utm(coordinates:Tuple[float],
         Output:        
 	        dictionary -- {
                 zone: UTM zone,
-                coordinate: tuple with utm coordinate (easting, northing),
-                convergence: meridian convergence (bearing of grid north clockwise from true north), in degrees.
+                coordinate: tuple with utm coordinate (easting, northing, hemisphere),
+                convergence: meridian convergence (bearing of grid north
+                            clockwise from true north), in degrees.
                 scale: grid scale factor
             }
 
@@ -288,7 +291,10 @@ def llh2utm(coordinates:Tuple[float],
     latitude  = coordinates[0]
     longitude = coordinates[1]
 
-    assert latitude > -90.0 and latitude < 90.0 and longitude > -180.0 and longitude <= 180.0, 'Insert correct coordinates'
+    assert latitude > -90.0 and\
+           latitude < 90.0 and\
+           longitude > -180.0 and\
+           longitude <= 180.0, 'Insert correct coordinates'
 
     #calculate longitude zone
     if longitude < 0.0:
@@ -340,72 +346,74 @@ def llh2utm(coordinates:Tuple[float],
 
     e         = sqrt(f*(2-f)) #eccentricity
     n         = f / (2 - f)   #3rd flattening 
-    n2        = pow(n,2)
-    n3        = pow(n,3)
-    n4        = pow(n,4)
-    n5        = pow(n,5)
-    n6        = pow(n,6)
+    n2        = n**2
+    n3        = n**3
+    n4        = n**4
+    n5        = n**5
+    n6        = n**6
 
     cos_l     = cos(longitude)
     sin_l     = sin(longitude)
     tan_l     = tan(longitude)
 
     tau       = tan(latitude)
-    sigma     = sinh(e* atanh(e* tau/ sqrt(1+ tau*tau)))
-    tau_p     = tau * sqrt(1+sigma * sigma) - sigma * sqrt(1+ tau * tau)
+    sigma     = sinh(e* atanh(e* tau/ sqrt(1+ tau**2)))
+    tau_p     = tau * sqrt(1+sigma**2) - sigma * sqrt(1+ tau**2)
 
     xi_p      = atan2(tau_p, cos_l)
-    eta_p     = asinh(sin_l / sqrt(tau_p*tau_p + cos_l*cos_l))
+    eta_p     = asinh(sin_l / sqrt(tau_p**2 + cos_l**2))
 
-    A         = a/(1+n) * (1 + 1/4*n2 + 1/64*n4 + 1/256*n6)
+    a_s       = a/( 1 + n ) * ( 1 + 1/4 * n2 + 1/64 * n4 + 1/256 * n6)
 
     alpha     = [None, 
-                    1/2*n - 2/3*n2 + 5/16*n3 +   41/180*n4 - 127/288*n5 + 7891/37800*n6,
-                    13/48*n2 -  3/5*n3 + 557/1440*n4 + 281/630*n5 - 1983433/1935360*n6,
-				    61/240*n3 -  103/140*n4 + 15061/26880*n5 + 167603/181440*n6,
-					49561/161280*n4 - 179/168*n5 + 6601661/7257600*n6,
-					34729/80640*n5 - 3418889/1995840*n6,
-                    212378941/319334400*n6 ]
+                    1/2 * n - 2/3 * n2 + 5/16 * n3 +   41/180 * n4 - 127/288 * n5 + 7891/37800 * n6,
+                    13/48 * n2 -  3/5 * n3 + 557/1440 * n4 + 281/630 * n5 - 1983433/1935360 * n6,
+                    61/240 * n3 -  103/140 * n4 + 15061/26880 * n5 + 167603/181440 * n6,
+                    49561/161280 * n4 - 179/168 * n5 + 6601661/7257600 * n6,
+                    34729/80640 * n5 - 3418889/1995840 * n6,
+                    212378941/319334400 * n6 ]
 
     xi        = xi_p
     
     for j in range(1,7,1):
-            xi += alpha[j] * sin(2*j*xi_p) * cosh(2*j*eta_p)
+        xi += alpha[j] * sin(2 * j * xi_p) * cosh(2 * j * eta_p)
 
     eta       = eta_p
 
     for j in range(1,7,1):
-        eta += alpha [j] * cos(2*j*xi_p) * sinh(2*j*eta_p)
+        eta += alpha [j] * cos(2* j * xi_p) * sinh(2 * j* eta_p)
 
-    x         = 0.9996 * A * eta #0.996 = UTM scale on the central meridian
-    y         = 0.9996 * A * xi
+    x         = 0.9996 * a_s * eta #0.996 = UTM scale on the central meridian
+    y         = 0.9996 * a_s * xi
 
     # convergence: Karney 2011 Eq 23, 24
     p_p       = 1
     
     for j in range(1,7,1):
-        p_p += 2*j*alpha[j] * cos(2*j*xi_p) * cosh(2*j*eta_p)
+        p_p += 2 * j * alpha[j] * cos(2 * j * xi_p) * cosh(2 * j * eta_p)
 
     q_p       = 0
     
     for j in range(1,7,1):
-    	q_p += 2*j*alpha[j] * sin(2*j*xi_p) * sinh(2*j*eta_p)
+    	q_p += 2 * j * alpha[j] * sin(2 * j * xi_p) * sinh(2 * j * eta_p)
 
-    gamma_p  = atan(tau_p / sqrt(1+tau_p*tau_p)*tan_l)
+    gamma_p  = atan(tau_p / sqrt(1+tau_p**2)*tan_l)
     gamma_pp = atan2(q_p, p_p)
     gamma    = gamma_p + gamma_pp
 
     # scale: Karney 2011 Eq 25
 
     sin_lat = sin(latitude)
-    k_p = sqrt(1 - e*e*sin_lat*sin_lat) * sqrt(1 + tau * tau) / sqrt(tau_p*tau_p + cos_l*cos_l)
-    k_pp = A / a * sqrt(p_p*p_p + q_p*q_p)
+    k_p     = sqrt(1 - e**2 * sin_lat**2) *\
+              sqrt(1 + tau**2) / sqrt(tau_p**2 + cos_l**2)
 
-    k = 0.9996 * k_p * k_pp
+    k_pp    = a_s / a * sqrt(p_p**2 + q_p**2)
+    k       = 0.9996 * k_p * k_pp
 
-    x = x + 500e3
+    x       = x + 500e3
+
     if (y < 0):
-        y = y + 10000e3
+        y += 10000e3
 
     return {'zone':zone,
             'coordinate':(round(x,9),round(y,9),"N" if lat>0 else "S"),
@@ -422,7 +430,8 @@ def utm2llh(
     '''
         Convert from utm to latlon
         Based on https://www.movable-type.co.uk/scripts/latlong-utm-mgrs.html
-        
+        Reference: Karney 2011 ‘Transverse Mercator with an accuracy of a few nanometers’
+
         Keyword arguments:
             zone         -- UTM zone
             coordinate  -- (easting,northing,hemisphere)
@@ -431,7 +440,8 @@ def utm2llh(
         Output:        
 	        dictionary -- {
                 coordinate: tuple with latlon coordinates
-                convergence: meridian convergence (bearing of grid north clockwise from true north), in degrees.
+                convergence: meridian convergence (bearing of grid north 
+                            clockwise from true north), in degrees.
                 scale: grid scale factor
             }
 
@@ -452,11 +462,11 @@ def utm2llh(
 
     e         = sqrt(f*(2-f)) #eccentricity
     n         = f / (2 - f)   #3rd flattening 
-    n2        = pow(n,2)
-    n3        = pow(n,3)
-    n4        = pow(n,4)
-    n5        = pow(n,5)
-    n6        = pow(n,6)
+    n2        = n**2
+    n3        = n**3
+    n4        = n**4
+    n5        = n**5
+    n6        = n**6
     
     A         = a/(1 + n) * (1 + 1/4 * n2 + 1/64 * n4 + 1/256 * n6)
     eta       = x /(0.9996 * A)
@@ -464,8 +474,8 @@ def utm2llh(
 
     beta = [None,
                 1/2 * n - 2/3 * n2 + 37/96 * n3 - 1/360 * n4 - 81/512 * n5 + 96199/604800 * n6,
-                1/48*n2 + 1/15*n3 - 437/1440 * n4 + 46/105*n5 - 1118711/3870720*n6,
-                17/480*n3 - 37/840 * n4 - 209/4480 * n5 + 5569/90720*n6,
+                1/48 * n2 + 1/15 * n3 - 437/1440 * n4 + 46/105 * n5 - 1118711/3870720 * n6,
+                17/480 * n3 - 37/840 * n4 - 209/4480 * n5 + 5569/90720 * n6,
                 4397/161280 * n4 - 11/504 * n5 - 830251/7257600 * n6,
                 4583/161280 * n5 - 108847/3991680 * n6,
                 20648693/638668800 * n6]
@@ -473,27 +483,27 @@ def utm2llh(
     xi_p = xi
     
     for j in range(1,6,1):
-        xi_p -= beta[j] * sin(2*j*xi) * cosh(2*j*eta)
+        xi_p -= beta[j] * sin(2 * j * xi) * cosh(2 * j * eta)
 
     eta_p = eta
     
     for j in range(1,6,1):
-        eta_p -= beta[j] * cos(2*j*xi) * sinh(2*j*eta)
+        eta_p -= beta[j] * cos(2 * j * xi) * sinh(2 * j * eta)
 
     sinh_eta_p  = sinh(eta_p)
     sin_xi_p    = sin(xi_p)
     cos_xi_p    = cos(xi_p)
 
-    tau_p       = sin_xi_p / sqrt(sinh_eta_p * sinh_eta_p + cos_xi_p * cos_xi_p)
+    tau_p       = sin_xi_p / sqrt(sinh_eta_p**2 + cos_xi_p**2)
 
     delta_tau_i = 1e12
     tau_i       = tau_p
     
     while (abs(delta_tau_i) > 1e-12):
-        sigma_i  = sinh(e * atanh(e * tau_i/ sqrt(1+tau_i*tau_i)))
-        tau_i_p  = tau_i * sqrt(1 + sigma_i*sigma_i) - sigma_i * sqrt(1 + tau_i * tau_i)
-        delta_tau_i = (tau_p - tau_i_p)/sqrt(1+tau_i_p * tau_i_p) *\
-                      (1 + (1-e * e)* tau_i * tau_i) / ((1-e*e)*sqrt(1+tau_i*tau_i))
+        sigma_i     = sinh(e * atanh(e * tau_i/ sqrt(1+tau_i**2)))
+        tau_i_p     = tau_i * sqrt(1 + sigma_i**2) - sigma_i * sqrt(1 + tau_i**2)
+        delta_tau_i = (tau_p - tau_i_p)/sqrt(1 + tau_i_p**2) *\
+                      (1 + (1 - e**2)* tau_i**2) / ((1-e**2)*sqrt(1+tau_i**2))
         tau_i += delta_tau_i
     
     tau     = tau_i
@@ -504,7 +514,7 @@ def utm2llh(
     p = 1
     
     for j in range(1,7,1):
-        p -= 2 * j * beta[j] * cos(2*j*xi) * cosh(2 * j * eta)
+        p -= 2 * j * beta[j] * cos(2 * j * xi) * cosh(2 * j * eta)
         
     q = 0
     for j in range(1,7,1):
@@ -517,10 +527,10 @@ def utm2llh(
     #Karney 2011 Eq 28
 
     sin_phi = sin(phi)
-    k_p = sqrt(1 - e * e * sin_phi * sin_phi) * sqrt(1 + tau * tau) *\
-          sqrt(sinh_eta_p * sinh_eta_p + cos_xi_p * cos_xi_p)
+    k_p = sqrt(1 - e**2 * sin_phi**2) * sqrt(1 + tau**2) *\
+          sqrt(sinh_eta_p**2 + cos_xi_p**2)
     
-    k_pp = A / a / sqrt(p*p + q*q)
+    k_pp = A / a / sqrt(p**2 + q**2)
 
     k = 0.9996 * k_p * k_pp
 
