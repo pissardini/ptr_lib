@@ -456,7 +456,6 @@ def utm2llh(
         y = northing - 10000e3
     else:
         y = northing
-    #
     
     # from Karney 2011 Eq 15-22, 36
 
@@ -468,9 +467,9 @@ def utm2llh(
     n5        = n**5
     n6        = n**6
     
-    A         = a/(1 + n) * (1 + 1/4 * n2 + 1/64 * n4 + 1/256 * n6)
-    eta       = x /(0.9996 * A)
-    xi        = y /(0.9996 * A)
+    a_s         = a/(1 + n) * (1 + 1/4 * n2 + 1/64 * n4 + 1/256 * n6)
+    eta       = x /(0.9996 * a_s)
+    xi        = y /(0.9996 * a_s)
 
     beta = [None,
                 1/2 * n - 2/3 * n2 + 37/96 * n3 - 1/360 * n4 - 81/512 * n5 + 96199/604800 * n6,
@@ -530,7 +529,7 @@ def utm2llh(
     k_p = sqrt(1 - e**2 * sin_phi**2) * sqrt(1 + tau**2) *\
           sqrt(sinh_eta_p**2 + cos_xi_p**2)
     
-    k_pp = A / a / sqrt(p**2 + q**2)
+    k_pp = a_s / a / sqrt(p**2 + q**2)
 
     k = 0.9996 * k_p * k_pp
 
